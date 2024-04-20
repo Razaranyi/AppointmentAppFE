@@ -29,4 +29,12 @@
     <string name="sign_up_prompt">Don\'t Have An Account? Sign Up</string>
     <string name="sign_up_keyword">Sign Up</string>
 
+
+    <!-- CreateBusinessActivity strings -->
+    <string name="business_name">Business Name</string>
+    <string name="upload_logo">Upload Logo</string>
+    <string name="create_business">Create Business</string>
+    <string name="create_your_business">Create Your Business</string>
+
+
 </resources>
