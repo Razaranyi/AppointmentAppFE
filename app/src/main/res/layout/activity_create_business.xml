@@ -65,7 +65,7 @@
                     android:textColor="@color/primary_text_color"
                     android:paddingStart="16dp"
                     android:paddingEnd="16dp"
-                    android:drawableEnd="@drawable/ic_dropdown_arrow" /> <!-- Use your own dropdown arrow drawable or remove if unnecessary -->
+                    android:drawableEnd="@drawable/ic_dropdown_arrow" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <!-- Business Category 2 Dropdown -->
