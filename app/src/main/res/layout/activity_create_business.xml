@@ -49,40 +49,42 @@
                 android:textSize="16sp" />
             </com.google.android.material.textfield.TextInputLayout>
 
+            <!-- Business Category 1 Dropdown -->
             <com.google.android.material.textfield.TextInputLayout
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="16dp">
 
-            <!--  might change editText to Spinner. -->
-
-            <EditText
-                android:id="@+id/businessCategory1EditText"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="Category 1"
-                android:paddingStart="16dp"
-                android:paddingEnd="16dp"
-                android:textColor="@color/primary_text_color"
-                android:inputType="text"/>
+                <AutoCompleteTextView
+                    android:id="@+id/businessCategory1AutoCompleteTextView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Category 1"
+                    android:inputType="none"
+                    android:textColor="@color/primary_text_color"
+                    android:paddingStart="16dp"
+                    android:paddingEnd="16dp"
+                    android:drawableEnd="@drawable/ic_dropdown_arrow" /> <!-- Use your own dropdown arrow drawable or remove if unnecessary -->
             </com.google.android.material.textfield.TextInputLayout>
 
+            <!-- Business Category 2 Dropdown -->
             <com.google.android.material.textfield.TextInputLayout
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="16dp">
 
-            <EditText
-                android:id="@+id/businessCategory2EditText"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="Category 2"
-                android:paddingStart="16dp"
-                android:paddingEnd="16dp"
-                android:textColor="@color/primary_text_color"
-                android:inputType="text"/>
+                <AutoCompleteTextView
+                    android:id="@+id/businessCategory2AutoCompleteTextView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Category 2"
+                    android:inputType="none"
+                    android:textColor="@color/primary_text_color"
+                    android:paddingStart="16dp"
+                    android:paddingEnd="16dp"
+                    android:drawableEnd="@drawable/ic_dropdown_arrow" /> <!-- Use your own dropdown arrow drawable or remove if unnecessary -->
             </com.google.android.material.textfield.TextInputLayout>
 
 
