@@ -69,8 +69,10 @@ public class LoginActivity extends AppCompatActivity {
 
                 new Thread(() -> {
                     JSONObject response = NetworkUtil.performPostRequest(
+                            this,
                             "http://10.0.2.2:8080/api/auth/authenticate",
-                            postData
+                            postData,
+                            false
                     );
                     processResponse(response);
                 }).start();

@@ -57,7 +57,7 @@
                 android:layout_marginBottom="16dp">
 
                 <AutoCompleteTextView
-                    android:id="@+id/businessCategory1AutoCompleteTextView"
+                    android:id="@+id/businessCategory1"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="Category 1"
@@ -76,7 +76,7 @@
                 android:layout_marginBottom="16dp">
 
                 <AutoCompleteTextView
-                    android:id="@+id/businessCategory2AutoCompleteTextView"
+                    android:id="@+id/businessCategory2"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="Category 2"
