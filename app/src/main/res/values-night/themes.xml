@@ -1,0 +1,19 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Base application theme. -->
+    <style name="Theme.EassyAppointmentFE" parent="Theme.AppCompat.Light">
+        <!-- Customize your dark theme here. -->
+        <!-- <item name="colorPrimary">@color/my_dark_primary</item> -->
+
+    </style>
+
+    <style name="AppTheme" parent="Theme.MaterialComponents.Light">
+        <!-- ... other style items ... -->
+        <item name="materialButtonStyle">@style/MyMaterialButtonStyle</item>
+    </style>
+
+    <style name="MyMaterialButtonStyle" parent="Widget.MaterialComponents.Button">
+        <item name="background">@color/button_color</item>
+    </style>
+
+
+</resources>
