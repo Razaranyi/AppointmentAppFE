@@ -1,12 +1,14 @@
 package com.example.eassyappointmentfe.businessActivity;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -27,6 +29,8 @@ public class CreateBusinessActivity extends AppCompatActivity {
 
     private EditText businessNameEditText;
     private ImageView businessLogoImageView;
+    private AutoCompleteTextView categoty1;
+    private AutoCompleteTextView categoty2;
     private Button uploadLogoButton;
     private Button createBusinessButton;
 
@@ -39,7 +43,12 @@ public class CreateBusinessActivity extends AppCompatActivity {
 //        businessLogoImageView = findViewById(R.id.businessLogoImageView);
         uploadLogoButton = findViewById(R.id.uploadLogoButton);
         createBusinessButton = findViewById(R.id.createBusinessButton);
+        categoty1 = findViewById(R.id.businessCategory1);
+        categoty2 = findViewById(R.id.businessCategory2);
         fetchCategories();
+        setUpCreateBusinessButton();
+
+
 
         // TODO: Set up button click listeners, image selection, and business creation logic.
 
@@ -92,6 +101,60 @@ public class CreateBusinessActivity extends AppCompatActivity {
             e.printStackTrace();
         }
         return categoryList;
+    }
+
+    private void setUpCreateBusinessButton() {
+        Button createBusinessButton = findViewById(R.id.createBusinessButton);
+        createBusinessButton.setOnClickListener(v -> {
+            JSONObject postData = new JSONObject();
+            try {
+                postData.put("name", businessNameEditText.getText().toString().trim());
+
+                // add categories to an array
+                JSONArray categoriesArray = new JSONArray();
+                categoriesArray.put(categoty1.getText().toString());
+                categoriesArray.put(categoty2.getText().toString());
+
+                // Wrapping data in another JSONObject as per to the structure of the request body
+                JSONObject dataObject = new JSONObject();
+                dataObject.put("name", businessNameEditText.getText().toString().trim());
+                dataObject.put("businessCategories", categoriesArray);
+
+                JSONObject rootObject = new JSONObject();
+                rootObject.put("data", dataObject);
+                System.out.println(rootObject.toString());
+
+                new Thread(() -> {
+                    String response = String.valueOf(NetworkUtil.performPostRequest(
+                            this,
+                            "http://10.0.2.2:8080/api/businesses/create",
+                            rootObject,
+                            true
+                    ));
+
+                    processResponse(response);
+                }).start();
+            } catch (JSONException e) {
+                Log.e("CreateBusinessActivity", "JSON Exception: ", e);
+            }
+        });
+    }
+
+    private void processResponse(String response) {
+        try {
+            JSONObject jsonResponse = new JSONObject(response);
+            int status = jsonResponse.getInt("status");
+            String message = jsonResponse.getJSONObject("response").getString("message");
+
+            runOnUiThread(() -> {
+                Toast.makeText(CreateBusinessActivity.this, message, Toast.LENGTH_LONG).show();
+            });
+        } catch (JSONException e) {
+            Log.e("CreateBusinessActivity", "JSON Parsing Exception: ", e);
+            runOnUiThread(() -> {
+                Toast.makeText(CreateBusinessActivity.this, "An error occurred while processing the response.", Toast.LENGTH_LONG).show();
+            });
+        }
     }
 
 
