@@ -47,6 +47,10 @@ public class ImageUtils {
      * @return                The byte array representation of the image, or null if an error occurred.
      */
     public static byte[] convertImageToByteArray(Context context, Uri imageUri, Bitmap.CompressFormat compressFormat, int quality) {
+        if (imageUri == null) {
+            return null; // No image to convert
+        }
+
         InputStream imageStream = null;
         ByteArrayOutputStream byteArrayOutputStream = null;
         try {

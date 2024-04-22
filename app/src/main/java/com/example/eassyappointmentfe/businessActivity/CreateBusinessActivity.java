@@ -80,6 +80,9 @@ public class CreateBusinessActivity extends AppCompatActivity {
      * @param uri URI of the selected image.
      */
     private void handleImageSelection(Uri uri) {
+        if (uri == null) { // No image selected
+            return;
+        }
         ImageUtils.handleImageSelection(this, uri, businessLogoImageView, Bitmap.CompressFormat.JPEG, 100);
     }
 
