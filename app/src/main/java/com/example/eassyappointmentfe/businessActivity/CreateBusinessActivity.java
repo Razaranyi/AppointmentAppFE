@@ -76,11 +76,9 @@ public class CreateBusinessActivity extends AppCompatActivity {
         // Set listeners to handle selection, map back to Category objects
         autoCompleteTextView.setOnItemClickListener((parent, view, position, id) -> {
             Category selectedCategory = fullCategories.get(position);
-            // You can now use selectedCategory.getId() and selectedCategory.getName()
         });
         autoCompleteTextView2.setOnItemClickListener((parent, view, position, id) -> {
             Category selectedCategory = fullCategories.get(position);
-            // Similarly, use selectedCategory details as needed
         });
     }
 
