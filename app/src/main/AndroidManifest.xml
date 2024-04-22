@@ -2,7 +2,13 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <!-- Add the INTERNET permission -->
     <uses-permission android:name="android.permission.INTERNET" />
+
+    <!-- Add the ACCESS_NETWORK_STATE permission -->
+
+
+
 
     <application
         android:allowBackup="true"
@@ -29,6 +35,13 @@
         <!-- LoginActivity -->
         <activity
             android:name=".authActivity.LoginActivity"
+            android:exported="true">
+            <!-- No intent-filter here, since this is not the entry point of the app -->
+        </activity>
+
+        <!-- CreateBusinessActivity -->
+        <activity
+            android:name=".businessActivity.CreateBusinessActivity"
             android:exported="true">
             <!-- No intent-filter here, since this is not the entry point of the app -->
         </activity>

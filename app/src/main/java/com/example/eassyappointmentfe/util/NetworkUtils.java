@@ -1,16 +1,20 @@
 package com.example.eassyappointmentfe.util;
 
+import android.content.Context;
 import android.util.Log;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
-public class NetworkUtil {
+public class NetworkUtils {
 
     private static final String TAG = "NetworkUtil";
 
@@ -19,9 +23,10 @@ public class NetworkUtil {
      *
      * @param urlString The URL to send the POST request to.
      * @param postData  The JSON object containing the data to be sent with the request.
+     * @param isTokenRequired A boolean indicating whether the request requires a token.
      * @return A JSONObject containing the response code and the response body.
      */
-    public static JSONObject performPostRequest(String urlString, JSONObject postData) {
+    public static JSONObject performPostRequest(Context context, String urlString, JSONObject postData, boolean isTokenRequired) {
         HttpURLConnection connection = null;
         JSONObject responseJson = new JSONObject();
         try {
@@ -34,6 +39,9 @@ public class NetworkUtil {
             // Set the headers to accept and send JSON.
             connection.setRequestProperty("Content-Type", "application/json");
             connection.setRequestProperty("Accept", "application/json");
+            if (isTokenRequired) {
+                connection.setRequestProperty("Authorization", "Bearer " + TokenManager.getToken(context));
+            }
 
             // Enable output for the connection to send data.
             connection.setDoOutput(true);
@@ -79,4 +87,45 @@ public class NetworkUtil {
         }
         return responseJson;
     }
+
+    /**
+     * Performs a GET request to the specified URL.
+     *
+     * @param urlString The URL to send the GET request to.
+     * @param isTokenRequired A boolean indicating whether the request requires a token.
+     * @return A string containing the response body.
+     */
+
+    public static String performGetRequest(Context context, String urlString, boolean isTokenRequired) {
+        HttpURLConnection urlConnection = null;
+        StringBuilder result = new StringBuilder();
+        try {
+            URL url = new URL(urlString);
+            urlConnection = (HttpURLConnection) url.openConnection();
+            urlConnection.setRequestMethod("GET");
+            urlConnection.setConnectTimeout(15000);
+            urlConnection.setReadTimeout(15000);
+            urlConnection.setRequestProperty("Accept", "application/json");
+            if (isTokenRequired) {
+                urlConnection.setRequestProperty("Authorization", "Bearer " + TokenManager.getToken(context));
+                System.out.println("Bearer " + TokenManager.getToken(context));
+            }
+            urlConnection.connect();
+
+            InputStream in = new BufferedInputStream(urlConnection.getInputStream());
+            BufferedReader reader = new BufferedReader(new InputStreamReader(in));
+            String line;
+            while ((line = reader.readLine()) != null) {
+                result.append(line);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            if (urlConnection != null) {
+                urlConnection.disconnect();
+            }
+        }
+        return result.toString();
+    }
 }
+

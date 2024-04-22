@@ -18,7 +18,7 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.eassyappointmentfe.R;
-import com.example.eassyappointmentfe.util.NetworkUtil;
+import com.example.eassyappointmentfe.util.NetworkUtils;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -68,9 +68,11 @@ public class LoginActivity extends AppCompatActivity {
                 postData.put("password", userPassword.getText().toString().trim());
 
                 new Thread(() -> {
-                    JSONObject response = NetworkUtil.performPostRequest(
+                    JSONObject response = NetworkUtils.performPostRequest(
+                            this,
                             "http://10.0.2.2:8080/api/auth/authenticate",
-                            postData
+                            postData,
+                            false
                     );
                     processResponse(response);
                 }).start();
