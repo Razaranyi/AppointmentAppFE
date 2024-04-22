@@ -14,7 +14,7 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
-public class NetworkUtil {
+public class NetworkUtils {
 
     private static final String TAG = "NetworkUtil";
 
@@ -23,6 +23,7 @@ public class NetworkUtil {
      *
      * @param urlString The URL to send the POST request to.
      * @param postData  The JSON object containing the data to be sent with the request.
+     * @param isTokenRequired A boolean indicating whether the request requires a token.
      * @return A JSONObject containing the response code and the response body.
      */
     public static JSONObject performPostRequest(Context context, String urlString, JSONObject postData, boolean isTokenRequired) {
@@ -87,6 +88,14 @@ public class NetworkUtil {
         return responseJson;
     }
 
+    /**
+     * Performs a GET request to the specified URL.
+     *
+     * @param urlString The URL to send the GET request to.
+     * @param isTokenRequired A boolean indicating whether the request requires a token.
+     * @return A string containing the response body.
+     */
+
     public static String performGetRequest(Context context, String urlString, boolean isTokenRequired) {
         HttpURLConnection urlConnection = null;
         StringBuilder result = new StringBuilder();
@@ -119,3 +128,4 @@ public class NetworkUtil {
         return result.toString();
     }
 }
+

@@ -35,6 +35,7 @@
     <string name="upload_logo">Upload Logo</string>
     <string name="create_business">Create Business</string>
     <string name="create_your_business">Create Your Business</string>
+    <string name="business_logo">business logo</string>
 
 
 </resources>
