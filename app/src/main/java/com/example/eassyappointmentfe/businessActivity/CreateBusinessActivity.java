@@ -163,7 +163,7 @@ public class CreateBusinessActivity extends AppCompatActivity {
             new Thread(() -> {
                 String response = String.valueOf(NetworkUtils.performPostRequest(
                         this,
-                        "http://10.0.2.2:8080/api/businesses/create",
+                        "http://10.0.2.2:8080/api/business/create",
                         rootObject,
                         true
                 ));

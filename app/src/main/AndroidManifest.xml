@@ -43,7 +43,12 @@
         <activity
             android:name=".businessActivity.CreateBusinessActivity"
             android:exported="true">
-            <!-- No intent-filter here, since this is not the entry point of the app -->
+        </activity>
+
+        <!-- CreateBranchActivity -->
+        <activity
+            android:name=".businessActivity.CreateBranchActivity"
+            android:exported="true">
         </activity>
 
     </application>
