@@ -1,0 +1,138 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:orientation="vertical"
+    android:padding="42dp">
+
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="80dp" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Create New Branch"
+        android:textAppearance="@style/TextAppearance.AppCompat.Large"
+        android:gravity="center_horizontal"
+        android:textColor="@color/primary_text_color"
+        android:layout_marginBottom="24dp" />
+
+    <com.google.android.material.textfield.TextInputLayout
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp">
+
+        <EditText
+            android:id="@+id/branchNameInput"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Branch Name"
+            android:inputType="text"
+            android:textColor="@color/primary_text_color"
+            android:textSize="16sp"
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp"/>
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp">
+
+        <EditText
+            android:id="@+id/branchAddressInput"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Branch Address"
+            android:inputType="textPostalAddress"
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp"
+            android:textColor="@color/primary_text_color"
+            android:textSize="16sp" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <!-- Time Picker for Opening and Closing Hours -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginBottom="16dp">
+
+        <!-- Opening Hour Input -->
+        <com.google.android.material.textfield.TextInputLayout
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            app:endIconMode="custom"
+            app:endIconDrawable="@drawable/ic_time_picker"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginEnd="16dp">
+
+            <EditText
+                android:id="@+id/openingHourInput"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Opening Hour"
+                android:focusable="false"
+                android:padding="16dp"
+                android:textColor="@color/primary_text_color"
+                android:textSize="16sp" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <!-- Closing Hour Input -->
+        <com.google.android.material.textfield.TextInputLayout
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            app:endIconMode="custom"
+            app:endIconDrawable="@drawable/ic_time_picker"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginStart="8dp">
+
+            <EditText
+                android:id="@+id/closingHourInput"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Closing Hour"
+                android:focusable="false"
+                android:padding="16dp"
+                android:textColor="@color/primary_text_color"
+                android:textSize="16sp" />
+        </com.google.android.material.textfield.TextInputLayout>
+    </LinearLayout>
+
+    <!-- Branch Logo Image View -->
+    <ImageView
+        android:id="@+id/branchLogoImageView"
+        android:layout_width="120dp"
+        android:layout_height="120dp"
+        android:src="@drawable/ic_placeholder"
+        android:contentDescription="@string/upload_logo"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="24dp" />
+
+    <!-- Upload Logo Button -->
+    <Button
+        android:id="@+id/uploadLogoButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/upload_branch_logo"
+        android:background="@drawable/button_background"
+        android:textColor="@color/button_text_color"
+        android:layout_marginTop="16dp" />
+
+    <Button
+        android:id="@+id/createBranchButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/create_new_branch"
+        android:layout_marginTop="16dp"
+        android:background="@drawable/button_background"
+        android:textColor="@color/button_text_color"
+        android:layout_marginBottom="32dp" />
+
+</LinearLayout>

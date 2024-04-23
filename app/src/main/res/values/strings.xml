@@ -36,6 +36,8 @@
     <string name="create_business">Create Business</string>
     <string name="create_your_business">Create Your Business</string>
     <string name="business_logo">business logo</string>
+    <string name="create_new_branch">Create New Branch</string>
+    <string name="upload_branch_logo">Upload Branch Logo</string>
 
 
 </resources>
