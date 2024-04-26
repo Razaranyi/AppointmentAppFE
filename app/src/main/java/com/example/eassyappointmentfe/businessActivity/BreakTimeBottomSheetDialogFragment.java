@@ -30,9 +30,10 @@ public class BreakTimeBottomSheetDialogFragment extends DialogFragment {
 
     private LinearLayout dialogLayout;
 
+    private Button confirmButton;
+
     public interface BottomSheetListener {
         void onBreaksAdded(List<String> breaks);
-        void onDaysSelected(Set<DayOfWeek> days);
     }
 
     private BottomSheetListener mListener;
@@ -51,13 +52,48 @@ public class BreakTimeBottomSheetDialogFragment extends DialogFragment {
 
         dialogLayout = v.findViewById(R.id.breaksContainer);
 
-        setupButtons();
-
         addMoreBreaksButton.setOnClickListener(view -> {
 
             LinearLayout newBreakTimePair = createBreakTimeInputPair();
             int index = dialogLayout.indexOfChild(addMoreBreaksButton);
             dialogLayout.addView(newBreakTimePair, index);
+
+            confirmButton = v.findViewById(R.id.confirmBreaksButton);
+            confirmButton.setOnClickListener(view1 -> {
+                List<String> breaks = new ArrayList<>();
+                for (int i = 0; i < dialogLayout.getChildCount(); i++) {
+                    View child = dialogLayout.getChildAt(i);
+                    // Only proceed if the child is a LinearLayout containing the EditText pairs
+                    if (child instanceof LinearLayout) {
+                        LinearLayout breakTimePair = (LinearLayout) child;
+                        // Check each child within the LinearLayout
+                        EditText breakStartTimeInput = null;
+                        EditText breakEndTimeInput = null;
+
+                        for (int j = 0; j < breakTimePair.getChildCount(); j++) {
+                            View innerChild = breakTimePair.getChildAt(j);
+                            // Ensure the innerChild is an instance of EditText
+                            if (innerChild instanceof EditText) {
+                                EditText editText = (EditText) innerChild;
+                                // Determine whether this is the start or end time based on its position
+                                if (editText.getHint() != null && editText.getHint().toString().contains("Starting")) {
+                                    breakStartTimeInput = editText;
+                                } else if (editText.getHint() != null && editText.getHint().toString().contains("Ending")) {
+                                    breakEndTimeInput = editText;
+                                }
+                            }
+                        }
+
+                        // Add the break times to the list if both start and end inputs are not null
+                        if (breakStartTimeInput != null && breakEndTimeInput != null) {
+                            String breakPeriod = breakStartTimeInput.getText().toString() + " - " + breakEndTimeInput.getText().toString();
+                            breaks.add(breakPeriod);
+                        }
+                    }
+                }
+                mListener.onBreaksAdded(breaks);
+                dismiss();
+            });
         });
 
         return v;
@@ -107,21 +143,4 @@ public class BreakTimeBottomSheetDialogFragment extends DialogFragment {
         timePickerDialog.show();
     }
 
-    private void setupButtons() {
-        Button addButton = new Button(getContext());
-        addButton.setText("Add");
-        addButton.setOnClickListener(view -> {
-            // Add your logic for the 'Add' button here
-        });
-
-        Button cancelButton = new Button(getContext());
-        cancelButton.setText("Cancel");
-        cancelButton.setOnClickListener(view -> {
-            // Add your logic for the 'Cancel' button here
-            dismiss(); // This will close the dialog
-        });
-
-        dialogLayout.addView(addButton);
-        dialogLayout.addView(cancelButton);
-    }
 }

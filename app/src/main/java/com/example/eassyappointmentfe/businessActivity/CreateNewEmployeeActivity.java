@@ -43,6 +43,7 @@ public class CreateNewEmployeeActivity extends AppCompatActivity {
         // Initialize button actions
         setupAddMoreBreaksButton();
         setupChooseDaysButton();
+        setupDaysOfTheWeekButton();
         setupUploadEmployeeImageButton();
         setupCreateEmployeeButton();
     }
@@ -60,15 +61,31 @@ public class CreateNewEmployeeActivity extends AppCompatActivity {
                     public void onBreaksAdded(List<String> breaks) {
                         // Handle the breaks added by the user
                     }
-
-                    @Override
-                    public void onDaysSelected(Set<DayOfWeek> days) {
-                        // Handle the days selected by the user
-                    }
                 });
 
                 // Show the bottom sheet dialog fragment
                 breakTimeBottomSheetDialogFragment.show(getSupportFragmentManager(), breakTimeBottomSheetDialogFragment.getTag());
+            }
+        });
+    }
+
+    private void setupDaysOfTheWeekButton(){
+        chooseDaysButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Create a new instance of DayOfWeekSelectorDialogFragment
+                DayOfWeekSelectorDialogFragment dayOfWeekSelectorDialogFragment = new DayOfWeekSelectorDialogFragment();
+
+                // Set the listener to handle the actions from the dialog
+                dayOfWeekSelectorDialogFragment.setDayOfWeekSelectorListener(new DayOfWeekSelectorDialogFragment.DayOfWeekSelectorListener() {
+                    @Override
+                    public void onDaysSelected(boolean[] days) {
+                        // Handle the days selected by the user
+                    }
+                });
+
+                // Show the dialog fragment
+                dayOfWeekSelectorDialogFragment.show(getSupportFragmentManager(), dayOfWeekSelectorDialogFragment.getTag());
             }
         });
     }
