@@ -51,6 +51,12 @@
             android:exported="true">
         </activity>
 
+        <!-- CreateEmployeeActivity -->
+        <activity
+            android:name=".businessActivity.CreateNewEmployeeActivity"
+            android:exported="true">
+        </activity>
+
     </application>
 
 </manifest>

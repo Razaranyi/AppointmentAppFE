@@ -1,0 +1,97 @@
+<!-- activity_create_new_employee.xml -->
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <!-- add space -->
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="72dp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Create New Employee"
+            android:textAppearance="@style/TextAppearance.AppCompat.Large"
+            android:gravity="center_horizontal"
+            android:textColor="@color/primary_text_color"
+            android:layout_marginBottom="24dp" />
+
+        <!-- Employee Name Input -->
+        <com.google.android.material.textfield.TextInputLayout
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp">
+
+            <EditText
+                android:id="@+id/employeeNameInput"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Name"
+                android:inputType="textPersonName"
+                android:textColor="@color/primary_text_color"
+                android:textSize="16sp"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"/>
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <!-- Add More Breaks Button -->
+        <Button
+            android:id="@+id/addMoreBreaksButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Add Breaks"
+            android:background="@drawable/round_button"
+            android:textColor="@color/secondary_button_text"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="16dp"
+            android:layout_gravity="center_horizontal"/>
+
+        <!-- Choose Days Of The Week Button -->
+        <Button
+            android:id="@+id/chooseDaysButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Choose Days Of The Week"
+            android:background="@drawable/round_button"
+            android:textColor="@color/secondary_button_text"
+            android:layout_marginBottom="24dp"
+            android:layout_gravity="center_horizontal"/>
+
+        <!-- Employee Image Section -->
+        <ImageView
+            android:id="@+id/employeeImageView"
+            android:layout_width="120dp"
+            android:layout_height="120dp"
+            android:src="@drawable/ic_placeholder"
+            android:contentDescription="@string/upload_employee_image"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="16dp"/>
+
+        <!-- Upload Employee Image Button -->
+        <Button
+            android:id="@+id/uploadEmployeeImageButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Upload Employee Image"
+            android:layout_marginBottom="16dp"/>
+
+        <!-- Create New Employee Button -->
+        <Button
+            android:id="@+id/createEmployeeButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Create New Employee"
+            android:layout_marginBottom="32dp"/>
+    </LinearLayout>
+</ScrollView>
