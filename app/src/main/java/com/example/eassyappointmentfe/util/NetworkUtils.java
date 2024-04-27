@@ -27,6 +27,8 @@ public class NetworkUtils {
      * @return A JSONObject containing the response code and the response body.
      */
     public static JSONObject performPostRequest(Context context, String urlString, JSONObject postData, boolean isTokenRequired) {
+        System.out.println("perform post request method" +
+                        "\n url: " + urlString );
         HttpURLConnection connection = null;
         JSONObject responseJson = new JSONObject();
         try {
@@ -85,6 +87,7 @@ public class NetworkUtils {
                 connection.disconnect();
             }
         }
+        System.out.println(responseJson.toString());
         return responseJson;
     }
 
@@ -99,6 +102,8 @@ public class NetworkUtils {
     public static String performGetRequest(Context context, String urlString, boolean isTokenRequired) {
         HttpURLConnection urlConnection = null;
         StringBuilder result = new StringBuilder();
+        System.out.println("perform get request method" +
+                "\n url: " + urlString);
         try {
             URL url = new URL(urlString);
             urlConnection = (HttpURLConnection) url.openConnection();
@@ -125,7 +130,40 @@ public class NetworkUtils {
                 urlConnection.disconnect();
             }
         }
+        System.out.println("url: " + urlString + "\n" +
+                "result" + result.toString());
+
         return result.toString();
     }
+
+    public static String processResponse(JSONObject response, String key) {
+        System.out.println("process response method");
+        if (key.equals("message")) {
+            JSONObject responseObject = response.optJSONObject("response");
+            if (responseObject != null) {
+                String message = responseObject.optString("message");
+                if (message.contains("=")) {
+                    // Extract the value after '='
+                    return message.substring(message.indexOf('=') + 1, message.indexOf('}'));
+                }
+                return message;
+            }
+            return response.optString("message");
+        }
+        JSONObject dataObject = response.optJSONObject("data");
+        if (dataObject != null) {
+            return dataObject.optString(key);
+        } else {
+            JSONObject error = response.optJSONObject("response");
+            if (error != null) {
+                JSONObject errorObject = error.optJSONObject("error");
+                System.out.println("error: " + errorObject.toString());
+                return error.optString("message");
+            }
+            return null;
+        }
+    }
+
+
 }
 

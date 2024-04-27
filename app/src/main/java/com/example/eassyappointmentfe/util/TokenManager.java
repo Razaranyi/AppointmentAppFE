@@ -3,6 +3,8 @@ package com.example.eassyappointmentfe.util;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+import org.json.JSONObject;
+
 public class TokenManager {
     private static final String SHARED_PREFS_FILE = "com.example.eassyappointmentfe.SHARED_PREFS";
     private static final String TOKEN_KEY = "com.example.eassyappointmentfe.TOKEN_KEY";
@@ -18,4 +20,6 @@ public class TokenManager {
         SharedPreferences prefs = context.getSharedPreferences(SHARED_PREFS_FILE, Context.MODE_PRIVATE);
         return prefs.getString(TOKEN_KEY, null);
     }
+
+
 }

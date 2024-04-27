@@ -27,10 +27,7 @@
       <entry key="LoginActivity">
         <State />
       </entry>
-      <entry key="app">
-        <State />
-      </entry>
-      <entry key="useAppContext()">
+      <entry key="SignUpActivity">
         <State />
       </entry>
     </value>
