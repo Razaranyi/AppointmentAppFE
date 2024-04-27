@@ -174,7 +174,7 @@ public class CreateBranchActivity extends AppCompatActivity {
         try {
             String response = result.get();  // Blocks until the response is available
             JSONObject jsonResponse = new JSONObject(response);
-            return jsonResponse.getJSONObject("data").getString("id");  // Assuming 'data' is the correct key
+            return jsonResponse.getJSONObject("data").getString("id");
         } catch (ExecutionException | InterruptedException | JSONException e) {
             Log.e("CreateBranchActivity", "Exception: ", e);
             return null;

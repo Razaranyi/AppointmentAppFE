@@ -1,4 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string-array name="business_categories_array">Business categories</string-array>
+    <string-array name="business_categories_array">
+        <item>Business categories</item>
+    </string-array>
+    <string-array name="session_duration">
+        <item>15</item>
+        <item>30</item>
+        <item>45</item>
+        <item>60</item>
+        <item>75</item>
+        <item>90</item>
+        <item>105</item>
+        <item>120</item>
+    </string-array>
+    <string-array name="session_duration_display">
+        <item>15 Minutes</item>
+        <item>30 Minutes</item>
+        <item>45 Minutes</item>
+        <item>60 Minutes</item>
+        <item>75 Minutes</item>
+        <item>90 Minutes</item>
+        <item>105 Minutes</item>
+        <item>120 Minutes</item>
+    </string-array>
 </resources>

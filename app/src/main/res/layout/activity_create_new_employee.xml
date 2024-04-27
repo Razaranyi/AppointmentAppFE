@@ -45,6 +45,22 @@
                 android:paddingEnd="16dp"/>
         </com.google.android.material.textfield.TextInputLayout>
 
+        <!-- Employee session duration Input -->
+        <com.google.android.material.textfield.TextInputLayout
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp">
+
+            <Spinner
+                android:id="@+id/sessionDurationInput"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:spinnerMode="dropdown"
+                android:background="@drawable/spinner_outline"/>
+
+        </com.google.android.material.textfield.TextInputLayout>
+
         <!-- Add More Breaks Button -->
         <Button
             android:id="@+id/addMoreBreaksButton"
@@ -56,6 +72,8 @@
             android:layout_marginTop="8dp"
             android:layout_marginBottom="16dp"
             android:layout_gravity="center_horizontal"/>
+
+
 
         <!-- Choose Days Of The Week Button -->
         <Button
