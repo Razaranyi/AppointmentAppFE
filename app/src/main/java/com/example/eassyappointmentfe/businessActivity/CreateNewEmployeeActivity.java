@@ -3,10 +3,13 @@ package com.example.eassyappointmentfe.businessActivity;
 import static com.example.eassyappointmentfe.util.NetworkUtils.processResponse;
 
 import android.os.Bundle;
+import android.view.MotionEvent;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -33,6 +36,7 @@ import java.util.concurrent.Future;
 public class CreateNewEmployeeActivity extends AppCompatActivity {
     private final Boolean[] daysOfTheWeek = new Boolean[7];
     private EditText employeeNameInput;
+    private Spinner sessionDurationInput;
     private ImageView employeeImageView;
     private Button addMoreBreaksButton;
     private Button chooseDaysButton;
@@ -50,10 +54,12 @@ public class CreateNewEmployeeActivity extends AppCompatActivity {
         chooseDaysButton = findViewById(R.id.chooseDaysButton);
         uploadEmployeeImageButton = findViewById(R.id.uploadEmployeeImageButton);
         createEmployeeButton = findViewById(R.id.createEmployeeButton);
+        sessionDurationInput = findViewById(R.id.sessionDurationInput);
 
         setupAddMoreBreaksButton();
         setupDaysOfTheWeekButton();
         setupCreateEmployeeButton();
+        setSpinnerButton();
     }
 
     private void setupAddMoreBreaksButton() {
@@ -77,41 +83,57 @@ public class CreateNewEmployeeActivity extends AppCompatActivity {
     }
 
     private void setupCreateEmployeeButton() {
-        createEmployeeButton.setOnClickListener(v -> {
-            try {
-                JSONObject employeeData = new JSONObject();
-                employeeData.put("name", employeeNameInput.getText().toString());
+    createEmployeeButton.setOnClickListener(v -> {
+        try {
+            JSONObject employeeData = new JSONObject();
+            employeeData.put("name", employeeNameInput.getText().toString());
 
-                JSONArray daysArray = new JSONArray();
-                for (Boolean selected : daysOfTheWeek) {
-                    daysArray.put(selected);
-                }
-                employeeData.put("workingDays", daysArray);
-
-                JSONArray breaksArray = new JSONArray();
-                for (String breakTime : breakTimesList) {
-                    breaksArray.put(breakTime);
-                }
-                employeeData.put("breakHour", breaksArray);
-
-                JSONObject rootObject = new JSONObject();
-                rootObject.put("data", employeeData);
-
-                sendEmployeeData(rootObject);
-                System.out.println("Request: " + rootObject.toString());
-                clearDialogSelections();
-                breakTimesList.clear();
-
-            } catch (JSONException | ExecutionException | InterruptedException e) {
-                e.printStackTrace();
+            JSONArray daysArray = new JSONArray();
+            for (Boolean selected : daysOfTheWeek) {
+                daysArray.put(selected);
             }
-        });
-    }
+            employeeData.put("workingDays", daysArray);
+
+            JSONArray breaksArray = new JSONArray();
+            for (String breakTime : breakTimesList) {
+                breaksArray.put(breakTime);
+            }
+            employeeData.put("breakHour", breaksArray);
+
+            // Check if a session duration has been selected
+            String selectedDuration = sessionDurationInput.getSelectedItem().toString();
+            if (!selectedDuration.equals("Session Duration")) {
+                // Get the selected item's position
+                int selectedPosition = sessionDurationInput.getSelectedItemPosition();
+                // Get the corresponding value from the session_duration array
+                String[] sessionDurations = getResources().getStringArray(R.array.session_duration);
+                selectedDuration = sessionDurations[selectedPosition];
+            } else {
+                // If no duration has been selected, treat as null
+                selectedDuration = null;
+            }
+            // Use the selected duration
+            employeeData.put("sessionDuration", selectedDuration);
+
+
+            JSONObject rootObject = new JSONObject();
+            rootObject.put("data", employeeData);
+
+            sendEmployeeData(rootObject);
+            System.out.println("Request: " + rootObject.toString());
+            clearDialogSelections();
+            breakTimesList.clear();
+
+        } catch (JSONException | ExecutionException | InterruptedException e) {
+            e.printStackTrace();
+        }
+    });
+}
 
 
     private void sendEmployeeData(JSONObject employeeData) throws JSONException, ExecutionException, InterruptedException {
         String businessId = getBusinessId();
-        String branchId = getBranchId(businessId, "Alon_Branch");
+        String branchId = getBranchId(businessId, "Alon branc");
 
         Thread thread = new Thread(() -> {
             JSONObject response = NetworkUtils.performPostRequest(
@@ -168,5 +190,22 @@ public class CreateNewEmployeeActivity extends AppCompatActivity {
         }
     }
 
+   private void setSpinnerButton() {
+    // Set the initial text of the Spinner
+    List<String> initialList = new ArrayList<>();
+    initialList.add("Session Duration");
+    ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, initialList);
+    sessionDurationInput.setAdapter(adapter);
+
+    // Populate the Spinner with the actual durations when it is clicked
+    sessionDurationInput.setOnTouchListener((v, event) -> {
+        if (event.getAction() == MotionEvent.ACTION_UP) {
+            String[] sessionDurations = getResources().getStringArray(R.array.session_duration_display);
+            ArrayAdapter<String> newAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, sessionDurations);
+            sessionDurationInput.setAdapter(newAdapter);
+        }
+        return false;
+    });
+}
 
 }

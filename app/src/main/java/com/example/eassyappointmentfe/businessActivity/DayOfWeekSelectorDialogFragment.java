@@ -35,7 +35,7 @@ public class DayOfWeekSelectorDialogFragment extends DialogFragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_day_of_week_selector, container, false);
         LinearLayout dialogLayout = v.findViewById(R.id.daysLayout);
-        String[] daysOfWeek = {"Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"};
+        String[] daysOfWeek = { "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"};
         checkBoxes = new CheckBox[daysOfWeek.length];
         for (int i = 0; i < checkBoxes.length; i++) {
             checkBoxes[i] = new CheckBox(getContext());
