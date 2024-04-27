@@ -1,0 +1,5 @@
+<!-- round_button.xml -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android">
+    <solid android:color="@color/secondary_button_background"/>
+    <corners android:radius="50dp"/>
+</shape>

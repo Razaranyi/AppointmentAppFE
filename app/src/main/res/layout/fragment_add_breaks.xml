@@ -1,0 +1,78 @@
+
+<!-- add scroll view -->
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true">
+
+    <!-- add linear layout -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Add Break Times"
+        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+        android:gravity="center_horizontal"
+        android:paddingBottom="8dp"/>
+
+    <!-- Container for dynamic break times, which will be added programmatically -->
+    <LinearLayout
+        android:id="@+id/breaksContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginBottom="16dp">
+
+        <!-- Layout for Start Time Picker -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:weightSum="2">
+
+
+            <EditText
+                android:id="@+id/breakStartTimeInput"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:hint="Starting Hour"
+                android:focusable="false"
+                android:drawableEnd="@drawable/ic_time_picker"
+                android:padding="16dp"/>
+
+            <EditText
+                android:id="@+id/breakEndTimeInput"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:hint="Ending Hour"
+                android:focusable="false"
+                android:drawableEnd="@drawable/ic_time_picker"
+                android:padding="16dp"
+                android:layout_marginStart="8dp"/>
+        </LinearLayout>
+
+        <!-- The existing button for adding more breaks -->
+        <Button
+            android:id="@+id/addBreakButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Add More Breaks"/>
+
+        <Button
+            android:id="@+id/confirmBreaksButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Confirm Selection"
+            android:layout_marginTop="16dp"/>
+
+
+    </LinearLayout>
+</LinearLayout>
+</ScrollView>
