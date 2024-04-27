@@ -57,6 +57,7 @@ public class BreakTimeBottomSheetDialogFragment extends DialogFragment {
         // Declare confirmButton outside of the click listener
         confirmButton = v.findViewById(R.id.confirmBreaksButton);
         confirmButton.setOnClickListener(view1 -> {
+
             List<String> breaks = new ArrayList<>();
             for (int i = 0; i < dialogLayout.getChildCount(); i++) {
                 View child = dialogLayout.getChildAt(i);
@@ -69,9 +70,11 @@ public class BreakTimeBottomSheetDialogFragment extends DialogFragment {
 
                     for (int j = 0; j < breakTimePair.getChildCount(); j++) {
                         View innerChild = breakTimePair.getChildAt(j);
+
                         // Ensure the innerChild is an instance of EditText
                         if (innerChild instanceof EditText) {
                             EditText editText = (EditText) innerChild;
+
                             // Determine whether this is the start or end time based on its position
                             if (editText.getHint() != null && editText.getHint().toString().contains("Starting")) {
                                 breakStartTimeInput = editText;
@@ -83,10 +86,13 @@ public class BreakTimeBottomSheetDialogFragment extends DialogFragment {
 
                     // Add the break times to the list if both start and end inputs are not null
                     if (breakStartTimeInput != null && breakEndTimeInput != null) {
-                        String breakPeriod = breakStartTimeInput.getText().toString() + "," + breakEndTimeInput.getText().toString();
-                        // Split the breakPeriod into an array of times
-                        List<String> breakTimes = Arrays.asList(breakPeriod.split(","));
-                        breaks.addAll(breakTimes);
+                        String startTime = breakStartTimeInput.getText().toString();
+                        String endTime = breakEndTimeInput.getText().toString();
+                        if (!startTime.isEmpty() && !endTime.isEmpty()) {
+                            String breakPeriod = startTime + "," + endTime;
+                            List<String> breakTimes = Arrays.asList(breakPeriod.split(","));
+                            breaks.addAll(breakTimes);
+                        }
                     }
                 }
             }

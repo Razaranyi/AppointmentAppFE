@@ -100,6 +100,7 @@ public class CreateNewEmployeeActivity extends AppCompatActivity {
                 sendEmployeeData(rootObject);
                 System.out.println("Request: " + rootObject.toString());
                 clearDialogSelections();
+                breakTimesList.clear();
 
             } catch (JSONException | ExecutionException | InterruptedException e) {
                 e.printStackTrace();
@@ -161,7 +162,7 @@ public class CreateNewEmployeeActivity extends AppCompatActivity {
         DayOfWeekSelectorDialogFragment dialogFragment = (DayOfWeekSelectorDialogFragment) getSupportFragmentManager().findFragmentByTag("dayOfWeekSelector");
         if (dialogFragment != null) {
             System.out.println("Fragment is added, now clearing selection");
-            dialogFragment.clearSelection();
+            DayOfWeekSelectorDialogFragment fragment = (DayOfWeekSelectorDialogFragment) getSupportFragmentManager().findFragmentByTag("dayOfWeekSelector");
         } else {
             System.out.println("Fragment not found or not added");
         }
