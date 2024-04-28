@@ -2,6 +2,8 @@ package com.example.eassyappointmentfe.businessActivity;
 
 import static com.example.eassyappointmentfe.util.NetworkUtils.processResponse;
 
+import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.MotionEvent;
 import android.view.View;
@@ -12,9 +14,12 @@ import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.eassyappointmentfe.R;
+import com.example.eassyappointmentfe.util.ImageUtils;
 import com.example.eassyappointmentfe.util.NetworkUtils;
 import com.google.android.material.textfield.TextInputEditText;
 
@@ -44,6 +49,13 @@ public class CreateNewEmployeeActivity extends AppCompatActivity {
     private Button createEmployeeButton;
     private List<String> breakTimesList = new ArrayList<>();
 
+    private final ActivityResultLauncher<String> mGetContent = registerForActivityResult(
+            new ActivityResultContracts.GetContent(),
+            this::handleImageSelection
+    );
+
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -55,11 +67,18 @@ public class CreateNewEmployeeActivity extends AppCompatActivity {
         uploadEmployeeImageButton = findViewById(R.id.uploadEmployeeImageButton);
         createEmployeeButton = findViewById(R.id.createEmployeeButton);
         sessionDurationInput = findViewById(R.id.sessionDurationInput);
+        employeeImageView = findViewById(R.id.employeeImageView);
+        uploadEmployeeImageButton = findViewById(R.id.uploadEmployeeImageButton);
 
+
+
+        uploadEmployeeImageButton.setOnClickListener(v -> mGetContent.launch("image/*"));
         setupAddMoreBreaksButton();
         setupDaysOfTheWeekButton();
         setupCreateEmployeeButton();
         setSpinnerButton();
+        System.out.println("Session Duration: " + sessionDurationInput.getSelectedItem().toString());
+
     }
 
     private void setupAddMoreBreaksButton() {
@@ -110,10 +129,16 @@ public class CreateNewEmployeeActivity extends AppCompatActivity {
                 selectedDuration = sessionDurations[selectedPosition];
             } else {
                 // If no duration has been selected, treat as null
-                selectedDuration = null;
+                selectedDuration = "null";
             }
             // Use the selected duration
             employeeData.put("sessionDuration", selectedDuration);
+
+            if (employeeImageView.getTag() != null) {
+                byte[] imageBytes = (byte[]) employeeImageView.getTag();
+                String encodedImage = android.util.Base64.encodeToString(imageBytes, android.util.Base64.DEFAULT);
+                employeeData.put("serviceProviderImage", encodedImage);
+            }
 
 
             JSONObject rootObject = new JSONObject();
@@ -130,10 +155,17 @@ public class CreateNewEmployeeActivity extends AppCompatActivity {
     });
 }
 
+    private void handleImageSelection(Uri uri) {
+        if (uri == null) {
+            return;
+        }
+        ImageUtils.handleImageSelection(this, uri, employeeImageView, Bitmap.CompressFormat.JPEG, 80);
+    }
+
 
     private void sendEmployeeData(JSONObject employeeData) throws JSONException, ExecutionException, InterruptedException {
         String businessId = getBusinessId();
-        String branchId = getBranchId(businessId, "Alon branc");
+        String branchId = getBranchId(businessId, "Branch");
 
         Thread thread = new Thread(() -> {
             JSONObject response = NetworkUtils.performPostRequest(
@@ -201,7 +233,7 @@ public class CreateNewEmployeeActivity extends AppCompatActivity {
     sessionDurationInput.setOnTouchListener((v, event) -> {
         if (event.getAction() == MotionEvent.ACTION_UP) {
             String[] sessionDurations = getResources().getStringArray(R.array.session_duration_display);
-            ArrayAdapter<String> newAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, sessionDurations);
+            ArrayAdapter<String> newAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, sessionDurations);
             sessionDurationInput.setAdapter(newAdapter);
         }
         return false;

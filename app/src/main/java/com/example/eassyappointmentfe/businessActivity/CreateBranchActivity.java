@@ -19,6 +19,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.example.eassyappointmentfe.R;
 import com.example.eassyappointmentfe.util.ImageUtils;
 import com.example.eassyappointmentfe.util.NetworkUtils;
+import com.example.eassyappointmentfe.util.TimeUtil;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -71,8 +72,8 @@ public class CreateBranchActivity extends AppCompatActivity {
         branchLogoImageView = findViewById(R.id.branchLogoImageView);
 
         uploadLogoButton.setOnClickListener(v -> mGetContent.launch("image/*"));
-        openingTimeInput.setOnClickListener(v -> showTimePickerDialog(openingTimeInput));
-        closingTimeInput.setOnClickListener(v -> showTimePickerDialog(closingTimeInput));
+        openingTimeInput.setOnClickListener(v -> TimeUtil.showTimePickerDialog(this,openingTimeInput));
+        closingTimeInput.setOnClickListener(v -> TimeUtil.showTimePickerDialog(this,closingTimeInput));
     }
 
 
@@ -83,19 +84,6 @@ public class CreateBranchActivity extends AppCompatActivity {
             ImageUtils.handleImageSelection(this, uri, branchLogoImageView, Bitmap.CompressFormat.JPEG, 100);
         }
 
-    private void showTimePickerDialog(final EditText timeInput) {
-        Calendar c = Calendar.getInstance();
-        int hour = c.get(Calendar.HOUR_OF_DAY);
-        int minute = c.get(Calendar.MINUTE);
-
-        TimePickerDialog timePickerDialog = new TimePickerDialog(this,
-                (view, hourOfDay, minuteOfHour) -> {
-                    String formattedTime = String.format(Locale.getDefault(), "%02d:%02d", hourOfDay, minuteOfHour);
-                    timeInput.setText(formattedTime);
-                }, hour, minute, true);
-        timePickerDialog.show();
-    }
-
     private void setUpCreateBranchButton() {
         createBranchButton.setOnClickListener(v -> createBranch());
         }
@@ -105,8 +93,8 @@ public class CreateBranchActivity extends AppCompatActivity {
                 JSONObject branchData = new JSONObject();
                 branchData.put("name", branchNameInput.getText().toString());
                 branchData.put("address", branchAddressInput.getText().toString());
-                branchData.put("openingHours", toLocalTime(openingTimeInput.getText().toString()));
-                branchData.put("closingHours", toLocalTime(closingTimeInput.getText().toString()));
+                branchData.put("openingHours", TimeUtil.toLocalTime(openingTimeInput.getText().toString()));
+                branchData.put("closingHours", TimeUtil.toLocalTime(closingTimeInput.getText().toString()));
                 if (branchLogoImageView.getTag() != null) {
                     byte[] imageBytes = (byte[]) branchLogoImageView.getTag();
                     String encodedImage = android.util.Base64.encodeToString(imageBytes, Base64.DEFAULT);
@@ -147,19 +135,6 @@ public class CreateBranchActivity extends AppCompatActivity {
         }
     }
 
-
-    private LocalTime toLocalTime(String timeString) {
-        if (timeString == null || timeString.isEmpty()) {
-            return null; // or return a default LocalTime value
-        }
-        String[] parts = timeString.split(":");
-        int hour = Integer.parseInt(parts[0]);
-        int minute = Integer.parseInt(parts[1]);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            return LocalTime.of(hour, minute);
-        }
-        return null;
-    }
 
     private String getBusinessId() {
         ExecutorService executor = Executors.newSingleThreadExecutor();

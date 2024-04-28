@@ -24,10 +24,10 @@
       <entry key="CreateNewEmployeeActivity">
         <State />
       </entry>
-      <entry key="SignUpActivity">
+      <entry key="LoginActivity">
         <State />
       </entry>
-      <entry key="useAppContext()">
+      <entry key="SignUpActivity">
         <State />
       </entry>
     </value>
