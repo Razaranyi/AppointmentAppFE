@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="30dp">
+
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="72dp" />
+
+    <!-- Header Section for the Name and Customer Status -->
+    <LinearLayout
+        android:id="@+id/headerSection"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical">
+
+        <TextView
+            android:id="@+id/businessName"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="Name"
+            android:textSize="24sp"
+            android:layout_marginTop="24dp"
+            android:layout_marginBottom="24dp"
+            android:layout_weight="1"/>
+
+        <TextView
+            android:id="@+id/customerStatus"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="I'm a Customer"
+            android:textSize="18sp"/>
+    </LinearLayout>
+
+    <!-- Branches Header and Add Branch Text Side by Side -->
+    <RelativeLayout
+        android:id="@+id/branchesHeaderContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/headerSection"
+        android:layout_marginTop="20dp">
+
+        <TextView
+            android:id="@+id/branchesHeader"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:text="Branches"
+            android:textSize="20sp"
+            android:textStyle="bold"/>
+
+        <TextView
+            android:id="@+id/addBranchText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:text="Add "
+            android:textSize="18sp"
+            android:textStyle="bold"/>
+
+    </RelativeLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/branchesRecyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/branchesHeaderContainer"
+        android:layout_marginTop="10dp"
+        android:orientation="horizontal"
+        tools:listitem="@layout/item_branch_image" />
+
+    <!-- Horizontal ScrollView for Branch Images -->
+    <HorizontalScrollView
+        android:id="@+id/branchesScrollView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/branchesRecyclerView"
+        android:layout_marginTop="10dp">
+
+        <LinearLayout
+            android:id="@+id/branchesContainer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <!-- Dynamically added ImageView go here -->
+            <!-- Placeholder for Branch Images -->
+        </LinearLayout>
+    </HorizontalScrollView>
+
+    <!-- Service Provider Header -->
+    <RelativeLayout
+        android:id="@+id/serviceProviderHeaderContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/branchesScrollView"
+        android:layout_marginTop="20dp">
+
+        <TextView
+            android:id="@+id/serviceProviderHeader"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:text="Service Providers"
+            android:textSize="20sp"
+            android:textStyle="bold"/>
+
+        <TextView
+            android:id="@+id/addServiceProviderText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:text="Add"
+            android:textSize="18sp"
+            android:textStyle="bold"/>
+
+    </RelativeLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/serviceProviderRecyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/serviceProviderHeaderContainer"
+        android:layout_marginTop="10dp"
+        android:orientation="horizontal"
+        tools:listitem="@layout/item_service_provider_image" />
+
+    <!-- Horizontal ScrollView for Service Provider Images -->
+    <HorizontalScrollView
+        android:id="@+id/serviceProviderScrollView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/serviceProviderRecyclerView"
+        android:layout_marginTop="10dp">
+
+        <LinearLayout
+            android:id="@+id/serviceProviderContainer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <!-- Dynamically added ImageView go here -->
+            <!-- Placeholder for Service Provider Images -->
+        </LinearLayout>
+    </HorizontalScrollView>
+
+    <!-- Bottom Navigation Placeholder -->
+    <LinearLayout
+        android:id="@+id/bottomNavigationPlaceholder"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:gravity="center"
+        android:orientation="horizontal">
+        <!-- Placeholder elements for bottom navigation go here -->
+    </LinearLayout>
+
+</RelativeLayout>

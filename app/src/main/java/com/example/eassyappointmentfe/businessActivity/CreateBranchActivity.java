@@ -1,8 +1,9 @@
 package com.example.eassyappointmentfe.businessActivity;
 
-import android.content.Intent;
+import android.app.TimePickerDialog;
 import android.graphics.Bitmap;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Base64;
 import android.util.Log;
@@ -23,6 +24,9 @@ import com.example.eassyappointmentfe.util.TimeUtil;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.time.LocalTime;
+import java.util.Calendar;
+import java.util.Locale;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -51,14 +55,7 @@ public class CreateBranchActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_branch);
-        Intent intent = getIntent();
-
-        if (intent == null) {
-            businessId = getBusinessId();
-        }
-        else {
-            businessId = intent.getStringExtra("businessId");
-        }
+        businessId = getBusinessId();
 
         initializeViews();
         setUpCreateBranchButton();
@@ -115,19 +112,9 @@ public class CreateBranchActivity extends AppCompatActivity {
                     ));
 
                     try {
-                        JSONObject responseJson = new JSONObject(response);
-                        String message = NetworkUtils.processResponse(responseJson, "message");
-                        int status = new JSONObject(response).getInt("status");
+                        String message = NetworkUtils.processResponse(new JSONObject(response), "message");
                         runOnUiThread(() -> {
                             Toast.makeText(CreateBranchActivity.this, message, Toast.LENGTH_LONG).show();
-
-                            if (status == 200) {
-                                Intent intent = new Intent(CreateBranchActivity.this, CreateNewEmployeeActivity.class);
-                                String branchId = NetworkUtils.processResponse(responseJson, "branchId");
-                                intent.putExtra("branchId", branchId);
-                                intent.putExtra("businessId", businessId);
-                                startActivity(intent);
-                            }
                         });
                     } catch (JSONException e) {
                         Log.e("CreateBranchActivity", "JSON Exception: ", e);
@@ -161,8 +148,6 @@ public class CreateBranchActivity extends AppCompatActivity {
     executor.shutdown();
 }
     }
-
-
 
 }
 

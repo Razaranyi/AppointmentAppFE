@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.provider.MediaStore;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -86,5 +87,12 @@ public class ImageUtils {
                e.printStackTrace();
             }
         }
+    }
+
+    public static Uri getImageUri(Context inContext, Bitmap inImage, String title) {
+        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+        inImage.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
+        String path = MediaStore.Images.Media.insertImage(inContext.getContentResolver(), inImage, title, null);
+        return Uri.parse(path);
     }
 }

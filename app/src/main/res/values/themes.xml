@@ -4,4 +4,11 @@
     </style>
 
     <style name="Theme.EassyAppointmentFE" parent="Base.Theme.EassyAppointmentFE" />
+    <style name="Theme.EassyAppointmentFE.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+    <style name="Theme.EassyAppointmentFE.AppBarOverlay"
+        parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+    <style name="Theme.EassyAppointmentFE.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 </resources>

@@ -10,4 +10,5 @@
     <color name="secondary_button_text">#FFFFFF</color>
     <color name="checked_color">#FF4081</color> <!-- Pink A200 -->
     <color name="stroke_color">#303F9F</color> <!-- Indigo 700 -->
+    <color name="imageTextBackground">#AAE3CBFD</color>
 </resources>
