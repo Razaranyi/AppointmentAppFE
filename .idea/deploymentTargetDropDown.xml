@@ -21,13 +21,13 @@
           <timeTargetWasSelectedWithDropDown value="2024-04-22T07:55:00.734184Z" />
         </State>
       </entry>
+      <entry key="CreateNewEmployeeActivity">
+        <State />
+      </entry>
       <entry key="LoginActivity">
         <State />
       </entry>
       <entry key="SignUpActivity">
-        <State />
-      </entry>
-      <entry key="useAppContext()">
         <State />
       </entry>
     </value>

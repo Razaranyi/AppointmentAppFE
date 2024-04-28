@@ -16,6 +16,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 
 import com.example.eassyappointmentfe.R;
+import com.example.eassyappointmentfe.util.TimeUtil;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -48,8 +49,8 @@ public class BreakTimeBottomSheetDialogFragment extends DialogFragment {
         Button addMoreBreaksButton = v.findViewById(R.id.addBreakButton);
         breakStartTimeInput = v.findViewById(R.id.breakStartTimeInput);
         breakEndTimeInput = v.findViewById(R.id.breakEndTimeInput);
-        breakStartTimeInput.setOnClickListener(view -> showTimePickerDialog(breakStartTimeInput));
-        breakEndTimeInput.setOnClickListener(view -> showTimePickerDialog(breakEndTimeInput));
+        breakStartTimeInput.setOnClickListener(view -> TimeUtil.showTimePickerDialog(getContext(),breakStartTimeInput));
+        breakEndTimeInput.setOnClickListener(view -> TimeUtil.showTimePickerDialog(getContext(),breakEndTimeInput));
         dialogLayout = v.findViewById(R.id.breaksContainer);
 
 
@@ -142,32 +143,9 @@ public class BreakTimeBottomSheetDialogFragment extends DialogFragment {
         EditText editText = new EditText(getContext());
         editText.setHint(hint);
         editText.setFocusable(false);
-        editText.setOnClickListener(view -> showTimePickerDialog(editText));
+        editText.setOnClickListener(view -> TimeUtil.showTimePickerDialog(getContext(),editText));
 
         return editText;
-    }
-
-    private void showTimePickerDialog(final EditText timeInput) {
-        Calendar c = Calendar.getInstance();
-        int hour = c.get(Calendar.HOUR_OF_DAY);
-        int minute = c.get(Calendar.MINUTE);
-
-        TimePickerDialog timePickerDialog = new TimePickerDialog(getContext(),
-                (view, hourOfDay, minuteOfHour) -> {
-                    String formattedTime = String.format(Locale.getDefault(), "%02d:%02d", hourOfDay, minuteOfHour);
-                    timeInput.setText(formattedTime);
-                }, hour, minute, true);
-        timePickerDialog.show();
-    }
-
-    private void saveBreaks(List<String> breaks) {
-        SharedPreferences sharedPreferences = getActivity().getSharedPreferences(SHARED_PREFS_NAME, Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putInt(BREAKS_KEY + "_count", breaks.size());
-        for (int i = 0; i < breaks.size(); i++) {
-            editor.putString(BREAKS_KEY + "_" + i, breaks.get(i));
-        }
-        editor.apply();
     }
 
     private List<String> loadBreaks() {

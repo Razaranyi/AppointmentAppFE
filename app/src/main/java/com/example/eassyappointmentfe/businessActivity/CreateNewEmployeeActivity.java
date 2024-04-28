@@ -133,7 +133,7 @@ public class CreateNewEmployeeActivity extends AppCompatActivity {
 
     private void sendEmployeeData(JSONObject employeeData) throws JSONException, ExecutionException, InterruptedException {
         String businessId = getBusinessId();
-        String branchId = getBranchId(businessId, "Alon branc");
+        String branchId = getBranchId(businessId, "Branch");
 
         Thread thread = new Thread(() -> {
             JSONObject response = NetworkUtils.performPostRequest(
