@@ -111,30 +111,22 @@ public class CreateBranchActivity extends AppCompatActivity {
                             true
                     ));
 
-                    processResponse(response);
+                    try {
+                        String message = NetworkUtils.processResponse(new JSONObject(response), "message");
+                        runOnUiThread(() -> {
+                            Toast.makeText(CreateBranchActivity.this, message, Toast.LENGTH_LONG).show();
+                        });
+                    } catch (JSONException e) {
+                        Log.e("CreateBranchActivity", "JSON Exception: ", e);
+                        runOnUiThread(() -> {
+                            Toast.makeText(CreateBranchActivity.this, "Failed to create branch", Toast.LENGTH_LONG).show();
+                        });
+                    }
                 }).start();
             } catch (JSONException e) {
                 Log.e("CreateBranchActivity", "JSON Exception: ", e);
             }
-
         }
-        private void processResponse(String response) {
-        try {
-            JSONObject responseObject = new JSONObject(response);
-            String message = responseObject.getJSONObject("response").getString("message");
-
-            runOnUiThread(() -> {
-                Toast.makeText(CreateBranchActivity.this, message, Toast.LENGTH_LONG).show();
-            });
-        } catch (JSONException e) {
-            Log.e("CreateBranchActivity", "JSON Exception: ", e);
-            runOnUiThread(() -> {
-                Toast.makeText(CreateBranchActivity.this, "Failed to create branch", Toast.LENGTH_LONG).show();
-            });
-            e.printStackTrace();
-        }
-    }
-
 
     private String getBusinessId() {
         ExecutorService executor = Executors.newSingleThreadExecutor();
@@ -147,15 +139,14 @@ public class CreateBranchActivity extends AppCompatActivity {
         });
 
         try {
-            String response = result.get();  // Blocks until the response is available
-            JSONObject jsonResponse = new JSONObject(response);
-            return jsonResponse.getJSONObject("data").getString("id");
-        } catch (ExecutionException | InterruptedException | JSONException e) {
-            Log.e("CreateBranchActivity", "Exception: ", e);
-            return null;
-        } finally {
-            executor.shutdown();
-        }
+    String response = result.get();  // Blocks until the response is available
+    return NetworkUtils.processResponse(new JSONObject(response), "id");
+} catch (ExecutionException | InterruptedException | JSONException e) {
+    Log.e("CreateBranchActivity", "Exception: ", e);
+    return null;
+} finally {
+    executor.shutdown();
+}
     }
 
 }
