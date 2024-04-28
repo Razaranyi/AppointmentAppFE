@@ -1,5 +1,6 @@
 package com.example.eassyappointmentfe.businessActivity;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
@@ -50,7 +51,14 @@ public class CreateBranchActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_branch);
-        businessId = getBusinessId();
+        Intent intent = getIntent();
+
+        if (intent == null) {
+            businessId = getBusinessId();
+        }
+        else {
+            businessId = intent.getStringExtra("businessId");
+        }
 
         initializeViews();
         setUpCreateBranchButton();
@@ -107,9 +115,19 @@ public class CreateBranchActivity extends AppCompatActivity {
                     ));
 
                     try {
-                        String message = NetworkUtils.processResponse(new JSONObject(response), "message");
+                        JSONObject responseJson = new JSONObject(response);
+                        String message = NetworkUtils.processResponse(responseJson, "message");
+                        int status = new JSONObject(response).getInt("status");
                         runOnUiThread(() -> {
                             Toast.makeText(CreateBranchActivity.this, message, Toast.LENGTH_LONG).show();
+
+                            if (status == 200) {
+                                Intent intent = new Intent(CreateBranchActivity.this, CreateNewEmployeeActivity.class);
+                                String branchId = NetworkUtils.processResponse(responseJson, "branchId");
+                                intent.putExtra("branchId", branchId);
+                                intent.putExtra("businessId", businessId);
+                                startActivity(intent);
+                            }
                         });
                     } catch (JSONException e) {
                         Log.e("CreateBranchActivity", "JSON Exception: ", e);

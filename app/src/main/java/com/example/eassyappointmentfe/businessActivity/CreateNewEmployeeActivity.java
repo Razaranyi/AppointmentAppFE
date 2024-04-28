@@ -2,6 +2,7 @@ package com.example.eassyappointmentfe.businessActivity;
 
 import static com.example.eassyappointmentfe.util.NetworkUtils.processResponse;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
@@ -49,6 +50,9 @@ public class CreateNewEmployeeActivity extends AppCompatActivity {
     private Button createEmployeeButton;
     private List<String> breakTimesList = new ArrayList<>();
 
+    private String businessId;
+    private String branchId;
+
     private final ActivityResultLauncher<String> mGetContent = registerForActivityResult(
             new ActivityResultContracts.GetContent(),
             this::handleImageSelection
@@ -58,6 +62,7 @@ public class CreateNewEmployeeActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        Intent intent = getIntent();
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_new_employee);
         employeeNameInput = findViewById(R.id.employeeNameInput);
@@ -69,6 +74,10 @@ public class CreateNewEmployeeActivity extends AppCompatActivity {
         sessionDurationInput = findViewById(R.id.sessionDurationInput);
         employeeImageView = findViewById(R.id.employeeImageView);
         uploadEmployeeImageButton = findViewById(R.id.uploadEmployeeImageButton);
+
+        businessId = intent.getStringExtra("businessId");
+        branchId = intent.getStringExtra("branchId");
+
 
 
 
@@ -164,8 +173,6 @@ public class CreateNewEmployeeActivity extends AppCompatActivity {
 
 
     private void sendEmployeeData(JSONObject employeeData) throws JSONException, ExecutionException, InterruptedException {
-        String businessId = getBusinessId();
-        String branchId = getBranchId(businessId, "Branch");
 
         Thread thread = new Thread(() -> {
             JSONObject response = NetworkUtils.performPostRequest(
@@ -177,38 +184,6 @@ public class CreateNewEmployeeActivity extends AppCompatActivity {
             runOnUiThread(() -> Toast.makeText(CreateNewEmployeeActivity.this, processResponse(response, "message"), Toast.LENGTH_LONG).show());
         });
         thread.start();
-    }
-
-    private String getBusinessId() throws JSONException, ExecutionException, InterruptedException {
-        ExecutorService executor = Executors.newSingleThreadExecutor();
-        Future<String> result = executor.submit(() -> {
-            return NetworkUtils.performGetRequest(
-                    this, "http://10.0.2.2:8080/api/business/get-id", true
-            );
-        });
-// Ensure the task has completed and get the result
-        String jsonResult = result.get();
-
-        JSONObject json = new JSONObject(jsonResult);
-        String businessId = processResponse(json, "id");
-        return businessId;
-    }
-
-    private String getBranchId(String businessId, String branchName) throws JSONException, ExecutionException, InterruptedException {
-        ExecutorService executor = Executors.newSingleThreadExecutor();
-        Future<String> result = executor.submit(() -> {
-            return NetworkUtils.performGetRequest(
-                    this,
-                    "http://10.0.2.2:8080/api/business/" + businessId + "/branch/" + branchName + "/get-id",
-                    true
-            );
-        });
-
-        String jsonResult = result.get();
-        JSONObject json = new JSONObject(jsonResult);
-        String branchId = processResponse(json, "branchId");
-        System.out.println(branchId);
-        return branchId;
     }
 
     private void clearDialogSelections() {

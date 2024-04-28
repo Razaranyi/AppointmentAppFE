@@ -172,14 +172,13 @@ public class CreateBusinessActivity extends AppCompatActivity {
                 try {
                     JSONObject responseJson = new JSONObject(response);
                     String message = NetworkUtils.processResponse(responseJson, "message");
-                    String businessId = NetworkUtils.processResponse(responseJson, "id");
-
 
                     int status = responseJson.getInt("status");
                     runOnUiThread(() -> {
                         Toast.makeText(CreateBusinessActivity.this, message, Toast.LENGTH_LONG).show();
                         if (status == HttpURLConnection.HTTP_OK) {
                             Intent intent = new Intent(CreateBusinessActivity.this, CreateBranchActivity.class);
+                            String businessId = NetworkUtils.processResponse(responseJson, "id");
                             intent.putExtra("businessId", businessId);
                             startActivity(intent);
                         }
