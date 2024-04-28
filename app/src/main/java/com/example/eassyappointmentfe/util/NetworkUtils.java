@@ -137,32 +137,36 @@ public class NetworkUtils {
     }
 
     public static String processResponse(JSONObject response, String key) {
-        System.out.println("process response method");
-        if (key.equals("message")) {
-            JSONObject responseObject = response.optJSONObject("response");
-            if (responseObject != null) {
-                String message = responseObject.optString("message");
-                if (message.contains("=")) {
-                    // Extract the value after '='
-                    return message.substring(message.indexOf('=') + 1, message.indexOf('}'));
-                }
-                return message;
-            }
-            return response.optString("message");
+        System.out.println("process response method: " + response.toString() + " key: " + key);
+
+        // Check if the response is nested inside a "response" key, typical for some API responses
+        JSONObject innerResponse = response.optJSONObject("response");
+        if (innerResponse != null) {
+            response = innerResponse;  // Use the inner response for further processing
         }
+
+        // For extracting message regardless of its location
+        if (key.equals("message")) {
+            String message = response.optString("message");
+            if (message.isEmpty()) {
+                // This covers the case where the message might be deeper in another object within 'response'
+                JSONObject errorObject = response.optJSONObject("error");
+                message = (errorObject != null) ? errorObject.optString("message") : null;
+            }
+            return message;
+        }
+
+        // Handle the data extraction uniformly
         JSONObject dataObject = response.optJSONObject("data");
         if (dataObject != null) {
+            System.out.println("Data object: " + dataObject.toString());
             return dataObject.optString(key);
         } else {
-            JSONObject error = response.optJSONObject("response");
-            if (error != null) {
-                JSONObject errorObject = error.optJSONObject("error");
-                System.out.println("error: " + errorObject.toString());
-                return error.optString("message");
-            }
-            return null;
+            // If there's no "data" object and the key is not "message", try getting the key directly from the response
+            return response.optString(key);
         }
     }
+
 
 
 }
