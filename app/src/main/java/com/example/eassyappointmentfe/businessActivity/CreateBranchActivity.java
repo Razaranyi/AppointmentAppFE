@@ -1,9 +1,7 @@
 package com.example.eassyappointmentfe.businessActivity;
 
-import android.app.TimePickerDialog;
 import android.graphics.Bitmap;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.util.Base64;
 import android.util.Log;
@@ -24,9 +22,6 @@ import com.example.eassyappointmentfe.util.TimeUtil;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.time.LocalTime;
-import java.util.Calendar;
-import java.util.Locale;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -148,6 +143,8 @@ public class CreateBranchActivity extends AppCompatActivity {
     executor.shutdown();
 }
     }
+
+
 
 }
 

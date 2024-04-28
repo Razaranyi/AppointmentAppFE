@@ -1,7 +1,7 @@
 package com.example.eassyappointmentfe.businessActivity;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Base64;
@@ -26,6 +26,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.net.HttpURLConnection;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -169,9 +170,19 @@ public class CreateBusinessActivity extends AppCompatActivity {
                 ));
 
                 try {
-                    String message = NetworkUtils.processResponse(new JSONObject(response), "message");
+                    JSONObject responseJson = new JSONObject(response);
+                    String message = NetworkUtils.processResponse(responseJson, "message");
+                    String businessId = NetworkUtils.processResponse(responseJson, "id");
+
+
+                    int status = responseJson.getInt("status");
                     runOnUiThread(() -> {
                         Toast.makeText(CreateBusinessActivity.this, message, Toast.LENGTH_LONG).show();
+                        if (status == HttpURLConnection.HTTP_OK) {
+                            Intent intent = new Intent(CreateBusinessActivity.this, CreateBranchActivity.class);
+                            intent.putExtra("businessId", businessId);
+                            startActivity(intent);
+                        }
                     });
                 } catch (JSONException e) {
                     Log.e("CreateBusinessActivity", "JSON Exception: ", e);
