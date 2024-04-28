@@ -168,30 +168,20 @@ public class CreateBusinessActivity extends AppCompatActivity {
                         true
                 ));
 
-                processResponse(response);
+                try {
+                    String message = NetworkUtils.processResponse(new JSONObject(response), "message");
+                    runOnUiThread(() -> {
+                        Toast.makeText(CreateBusinessActivity.this, message, Toast.LENGTH_LONG).show();
+                    });
+                } catch (JSONException e) {
+                    Log.e("CreateBusinessActivity", "JSON Exception: ", e);
+                    runOnUiThread(() -> {
+                        Toast.makeText(CreateBusinessActivity.this, "Failed to create business", Toast.LENGTH_LONG).show();
+                    });
+                }
             }).start();
         } catch (JSONException e) {
             Log.e("CreateBusinessActivity", "JSON Exception: ", e);
-        }
-    }
-
-    /**
-     * Processes the response from the server after attempting to create a new business.
-     * @param response JSON response from the server.
-     */
-    private void processResponse(String response) {
-        try {
-            JSONObject jsonResponse = new JSONObject(response);
-            String message = jsonResponse.getJSONObject("response").getString("message");
-
-            runOnUiThread(() -> {
-                Toast.makeText(CreateBusinessActivity.this, message, Toast.LENGTH_LONG).show();
-            });
-        } catch (JSONException e) {
-            Log.e("CreateBusinessActivity", "JSON Parsing Exception: ", e);
-            runOnUiThread(() -> {
-                Toast.makeText(CreateBusinessActivity.this, "An error occurred while processing the response.", Toast.LENGTH_LONG).show();
-            });
         }
     }
 }
