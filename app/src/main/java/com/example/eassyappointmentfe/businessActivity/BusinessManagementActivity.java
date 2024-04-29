@@ -1,3 +1,9 @@
+//TODO:1 Add Today's Appointments on service provider click - including cancel button then remove appointment button
+//TODO:2 Add a button to add business owner
+//TODO:3 fix Business name not showing
+//TODO:4 fix image outline not showing
+
+
 package com.example.eassyappointmentfe.businessActivity;
 
 import android.content.Intent;
@@ -50,16 +56,8 @@ public class BusinessManagementActivity extends AppCompatActivity implements Bra
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_business_management);
         Intent intent = getIntent();
-        SharedPreferences preferences = getSharedPreferences("com.example.eassyappointmentfe.SHARED_PREFS", MODE_PRIVATE);
 
-        businessId = intent.getStringExtra("businessId");
-        businessName = findViewById(R.id.businessName);
-        businessName.setText(preferences.getString("BUSINESS_NAME", "My Business"));
-        addBranchText = findViewById(R.id.addBranchText);
-        addServiceProviderText = findViewById(R.id.addServiceProviderText);
-        appointmentButton = findViewById(R.id.appointmentsButton);
-        branchRecyclerView = findViewById(R.id.branchesRecyclerView);
-        serviceProviderRecyclerView = findViewById(R.id.serviceProviderRecyclerView);
+        initialize(intent);
 
         setUpBranchRecyclerView();
         fetchBranches();
@@ -75,9 +73,21 @@ public class BusinessManagementActivity extends AppCompatActivity implements Bra
 
 
         setAddBranchText();
-        setUpAppointmentsButton();
+        setUpAppointmentsButton(); //to be removed
         setAddServiceProviderText();
 
+    }
+
+    private void initialize(Intent intent) {
+        SharedPreferences preferences = getSharedPreferences("com.example.eassyappointmentfe.SHARED_PREFS", MODE_PRIVATE);
+        businessId = intent.getStringExtra("businessId");
+        businessName = findViewById(R.id.businessName);
+        businessName.setText(preferences.getString("businessName","My Business"));
+        addBranchText = findViewById(R.id.addBranchText);
+        addServiceProviderText = findViewById(R.id.addServiceProviderText);
+        appointmentButton = findViewById(R.id.appointmentsButton);
+        branchRecyclerView = findViewById(R.id.branchesRecyclerView);
+        serviceProviderRecyclerView = findViewById(R.id.serviceProviderRecyclerView);
     }
 
     private void fetchBranches() {

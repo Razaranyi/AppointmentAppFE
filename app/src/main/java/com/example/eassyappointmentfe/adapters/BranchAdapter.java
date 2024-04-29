@@ -65,7 +65,6 @@ public class BranchAdapter extends RecyclerView.Adapter<BranchAdapter.BranchView
         public void bind(Branch branch) {
             imageView.setImageURI(branch.getBranchImage());
             branchUriTextView.setText(branch.getName());
-            // Set click listener
 
             itemView.setOnClickListener(v -> {
                 if (onBranchClickListener != null) {
