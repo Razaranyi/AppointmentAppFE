@@ -1,6 +1,7 @@
 package com.example.eassyappointmentfe.businessActivity;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
@@ -49,10 +50,11 @@ public class BusinessManagementActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_business_management);
         Intent intent = getIntent();
+        SharedPreferences preferences = getSharedPreferences("com.example.eassyappointmentfe.SHARED_PREFS", MODE_PRIVATE);
 
         businessId = intent.getStringExtra("businessId");
         businessName = findViewById(R.id.businessName);
-        businessName.setText(intent.getStringExtra("businessName"));
+        businessName.setText(preferences.getString("BUSINESS_NAME", "My Business"));
         addBranchText = findViewById(R.id.addBranchText);
         addServiceProviderText = findViewById(R.id.addServiceProviderText);
         appointmentButton = findViewById(R.id.appointmentsButton);
@@ -79,6 +81,9 @@ public class BusinessManagementActivity extends AppCompatActivity {
     }
 
     private void fetchBranches() {
+        if (businessId == null) {
+           businessId = NetworkUtils.getBusinessId(this);
+        }
         new Thread(() -> {
             String response = NetworkUtils.performGetRequest(
                     this,
@@ -95,7 +100,7 @@ public class BusinessManagementActivity extends AppCompatActivity {
     }
 
     private void fetchServiceProviders() {
-        System.out.println("Fetching service providers. Branches: " + branches.size());
+        System.out.println("Fetching service providers. Branches: " + branches.size() + ",Business ID: " + businessId + " Branch ID: " + branchId);
         if (branches.isEmpty()) {
             return;
         }
