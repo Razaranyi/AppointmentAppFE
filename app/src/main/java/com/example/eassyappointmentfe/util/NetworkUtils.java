@@ -1,7 +1,10 @@
 package com.example.eassyappointmentfe.util;
 
 import android.content.Context;
+import android.content.Intent;
 import android.util.Log;
+
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -13,6 +16,12 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 public class NetworkUtils {
 
@@ -136,6 +145,27 @@ public class NetworkUtils {
         return result.toString();
     }
 
+    public static String getBusinessId(Context context) {
+        ExecutorService executor = Executors.newSingleThreadExecutor();
+        Future<String> result = executor.submit(() -> {
+            return NetworkUtils.performGetRequest(
+                    context,
+                    "http://10.0.2.2:8080/api/business/get-id",
+                    true
+            );
+        });
+
+        try {
+            String response = result.get();  // Blocks until the response is available
+            return NetworkUtils.processResponse(new JSONObject(response), "id");
+        } catch (ExecutionException | InterruptedException | JSONException e) {
+            Log.e("CreateBranchActivity", "Exception: ", e);
+            return null;
+        } finally {
+            executor.shutdown();
+        }
+    }
+
     public static String processResponse(JSONObject response, String key) {
         System.out.println("process response method: " + response.toString() + " key: " + key);
 
@@ -166,7 +196,21 @@ public class NetworkUtils {
             return response.optString(key);
         }
     }
+    public static boolean[] convertJsonArrayToBooleanArray(JSONArray jsonArray) throws JSONException {
+        boolean[] workingDays = new boolean[jsonArray.length()];
+        for (int i = 0; i < jsonArray.length(); i++) {
+            workingDays[i] = jsonArray.getBoolean(i); // Assumes the JSON array contains boolean values
+        }
+        return workingDays;
+    }
 
+    public static Set<Long> convertJsonArrayToSet(JSONArray jsonArray) throws JSONException {
+        Set<Long> resultSet = new HashSet<>();
+        for (int i = 0; i < jsonArray.length(); i++) {
+            resultSet.add(jsonArray.getLong(i)); // Assumes the JSON array contains long values
+        }
+        return resultSet;
+    }
 
 
 }

@@ -7,7 +7,6 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.MotionEvent;
-import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -20,24 +19,19 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.eassyappointmentfe.R;
+import com.example.eassyappointmentfe.fragments.BreakTimeBottomSheetDialogFragment;
+import com.example.eassyappointmentfe.fragments.DayOfWeekSelectorDialogFragment;
 import com.example.eassyappointmentfe.util.ImageUtils;
 import com.example.eassyappointmentfe.util.NetworkUtils;
-import com.google.android.material.textfield.TextInputEditText;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.sql.Time;
-import java.time.DayOfWeek;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Set;
 import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
 
 public class CreateNewEmployeeActivity extends AppCompatActivity {
     private final Boolean[] daysOfTheWeek = new Boolean[7];
@@ -77,6 +71,9 @@ public class CreateNewEmployeeActivity extends AppCompatActivity {
 
         businessId = intent.getStringExtra("businessId");
         branchId = intent.getStringExtra("branchId");
+
+        System.out.println("Starting employee activity Business ID: " + businessId);
+        System.out.println("Starting employee activity Branch ID: " + branchId);
 
 
 
@@ -182,6 +179,16 @@ public class CreateNewEmployeeActivity extends AppCompatActivity {
                     true
             );
             runOnUiThread(() -> Toast.makeText(CreateNewEmployeeActivity.this, processResponse(response, "message"), Toast.LENGTH_LONG).show());
+            try {
+                if (response.getInt("status") == 200) {
+                    Intent intent = new Intent(CreateNewEmployeeActivity.this, BusinessManagementActivity.class);
+                    intent.putExtra("businessId", businessId);
+                    intent.putExtra("branchId", branchId);
+                    startActivity(intent);
+                }
+            } catch (JSONException e) {
+                throw new RuntimeException(e);
+            }
         });
         thread.start();
     }

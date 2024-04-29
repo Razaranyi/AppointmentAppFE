@@ -1,6 +1,7 @@
 package com.example.eassyappointmentfe.businessActivity;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
@@ -37,7 +38,8 @@ import java.util.stream.Collectors;
  */
 public class CreateBusinessActivity extends AppCompatActivity {
 
-    // UI elements
+    private static final String SHARED_PREFS_FILE = "com.example.eassyappointmentfe.SHARED_PREFS";
+    private static final String BUSINESS_NAME = "com.example.eassyappointmentfe.BUSINESS_NAME";
     private EditText businessNameEditText;
     private ImageView businessLogoImageView;
     private AutoCompleteTextView category1;
@@ -179,7 +181,17 @@ public class CreateBusinessActivity extends AppCompatActivity {
                         if (status == HttpURLConnection.HTTP_OK) {
                             Intent intent = new Intent(CreateBusinessActivity.this, CreateBranchActivity.class);
                             String businessId = NetworkUtils.processResponse(responseJson, "id");
+
+                            System.out.println("Business Activity businessId: " + businessId);
                             intent.putExtra("businessId", businessId);
+                            Intent mangmentIntent = new Intent(CreateBusinessActivity.this, BusinessManagementActivity.class);
+                            mangmentIntent.putExtra("businessId", businessId);
+                            SharedPreferences prefs = getSharedPreferences(SHARED_PREFS_FILE, MODE_PRIVATE);
+                            SharedPreferences.Editor editor = prefs.edit();
+                            editor.putString(BUSINESS_NAME, businessNameEditText.getText().toString().trim());
+
+
+
                             startActivity(intent);
                         }
                     });

@@ -1,4 +1,4 @@
-package com.example.eassyappointmentfe.businessActivity;
+package com.example.eassyappointmentfe.fragments;
 
 import android.app.TimePickerDialog;
 import android.content.Context;
