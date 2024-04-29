@@ -72,6 +72,9 @@ public class CreateNewEmployeeActivity extends AppCompatActivity {
         businessId = intent.getStringExtra("businessId");
         branchId = intent.getStringExtra("branchId");
 
+        System.out.println("Starting employee activity Business ID: " + businessId);
+        System.out.println("Starting employee activity Branch ID: " + branchId);
+
 
 
 
@@ -176,6 +179,16 @@ public class CreateNewEmployeeActivity extends AppCompatActivity {
                     true
             );
             runOnUiThread(() -> Toast.makeText(CreateNewEmployeeActivity.this, processResponse(response, "message"), Toast.LENGTH_LONG).show());
+            try {
+                if (response.getInt("status") == 200) {
+                    Intent intent = new Intent(CreateNewEmployeeActivity.this, BusinessManagementActivity.class);
+                    intent.putExtra("businessId", businessId);
+                    intent.putExtra("branchId", branchId);
+                    startActivity(intent);
+                }
+            } catch (JSONException e) {
+                throw new RuntimeException(e);
+            }
         });
         thread.start();
     }

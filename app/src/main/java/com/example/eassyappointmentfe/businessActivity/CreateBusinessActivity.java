@@ -179,7 +179,14 @@ public class CreateBusinessActivity extends AppCompatActivity {
                         if (status == HttpURLConnection.HTTP_OK) {
                             Intent intent = new Intent(CreateBusinessActivity.this, CreateBranchActivity.class);
                             String businessId = NetworkUtils.processResponse(responseJson, "id");
+
+                            System.out.println("Business Activity businessId: " + businessId);
                             intent.putExtra("businessId", businessId);
+                            Intent mangmentIntent = new Intent(CreateBusinessActivity.this, BusinessManagementActivity.class);
+
+                            mangmentIntent.putExtra("businessName", businessNameEditText.getText().toString().trim());
+                            mangmentIntent.putExtra("businessId", businessId);
+
                             startActivity(intent);
                         }
                     });

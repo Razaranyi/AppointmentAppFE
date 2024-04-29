@@ -25,7 +25,11 @@ public class BranchAdapter extends RecyclerView.Adapter<BranchAdapter.BranchView
 
     @Override
     public BranchViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_branch_image, parent, false);
+        View view = LayoutInflater.from(
+                parent.getContext()).inflate
+                    (R.layout.item_branch_image,
+                    parent,
+        false);
         return new BranchViewHolder(view);
     }
 
