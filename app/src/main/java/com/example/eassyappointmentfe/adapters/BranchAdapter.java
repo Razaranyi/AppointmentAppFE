@@ -17,10 +17,13 @@ import java.util.List;
 public class BranchAdapter extends RecyclerView.Adapter<BranchAdapter.BranchViewHolder> {
     private final List<Branch> branches;
     private final Context context;
+    private OnBranchClickListener onBranchClickListener;
 
-    public BranchAdapter(Context context, List<Branch> branches) {
+
+    public BranchAdapter(Context context, List<Branch> branches, OnBranchClickListener onBranchClickListener) {
         this.context = context;
         this.branches = branches;
+        this.onBranchClickListener = onBranchClickListener;
     }
 
     @Override
@@ -44,22 +47,37 @@ public class BranchAdapter extends RecyclerView.Adapter<BranchAdapter.BranchView
         return branches.size();
     }
 
+    public interface OnBranchClickListener {
+        void onBranchClick(Branch branch);
+    }
+
     class BranchViewHolder extends RecyclerView.ViewHolder {
         private final ImageView imageView;
         private final TextView branchUriTextView;
 
-        public BranchViewHolder(View itemView) {
-            super(itemView);
-            imageView = itemView.findViewById(R.id.image_branch);
-            branchUriTextView = itemView.findViewById(R.id.text_uri_title);
-        }
+      public BranchViewHolder(View itemView) {
+    super(itemView);
+    imageView = itemView.findViewById(R.id.image_branch);
+    imageView.setBackgroundResource(R.drawable.image_outline);
+    branchUriTextView = itemView.findViewById(R.id.text_uri_title);
+}
 
         public void bind(Branch branch) {
             imageView.setImageURI(branch.getBranchImage());
             branchUriTextView.setText(branch.getName());
             // Set click listener
-            itemView.setOnClickListener(v -> {/* Handle click */});
+
+            itemView.setOnClickListener(v -> {
+                if (onBranchClickListener != null) {
+                    onBranchClickListener.onBranchClick(branch);
+                }
+            });
+
         }
     }
+
+
+
+
 }
 

@@ -29,7 +29,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
-public class BusinessManagementActivity extends AppCompatActivity {
+public class BusinessManagementActivity extends AppCompatActivity implements BranchAdapter.OnBranchClickListener {
 
     private String businessId;
     private String branchId;
@@ -64,7 +64,7 @@ public class BusinessManagementActivity extends AppCompatActivity {
         setUpBranchRecyclerView();
         fetchBranches();
 
-        branchAdapter = new BranchAdapter(this, branches);
+        branchAdapter = new BranchAdapter(this, branches,this);
         branchRecyclerView.setAdapter(branchAdapter);
 
         setUpServiceProvidersRecyclerView();
@@ -106,7 +106,9 @@ public class BusinessManagementActivity extends AppCompatActivity {
         }
 
         new Thread(() -> {
-            branchId = String.valueOf(branches.get(0).getId());
+            if (branchId == null){
+                branchId = String.valueOf(branches.get(0).getId());
+            }
             String response = NetworkUtils.performGetRequest(
                     this,
                     "http://10.0.2.2:8080/api/business/" + businessId + "/" + branchId + "/service-provider/get-all",
@@ -199,7 +201,7 @@ public class BusinessManagementActivity extends AppCompatActivity {
     }
 
     private void updateBranches(List<Branch> newBranches) {
-        branchAdapter = new BranchAdapter(this, newBranches);
+        branchAdapter = new BranchAdapter(this, newBranches, this);
         branchRecyclerView.setAdapter(branchAdapter);
 
         fetchServiceProviders();
@@ -250,5 +252,11 @@ public class BusinessManagementActivity extends AppCompatActivity {
 //            intent.putExtra("businessId", businessId);
 //            startActivity(intent);
         });
+    }
+
+    @Override
+    public void onBranchClick(Branch branch) {
+        branchId = String.valueOf(branch.getId());
+        fetchServiceProviders();
     }
 }
