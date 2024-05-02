@@ -49,7 +49,7 @@ public class CategoriesAdapter extends RecyclerView.Adapter<CategoriesAdapter.Ca
         holder.bind(category);
 
         if ("Favorites".equals(category.getName())) {
-            holder.tvCategoryName.setTextColor(Color.RED); // Just an example
+        holder.tvCategoryName.setTextColor(Color.BLACK);
         } else {
             holder.tvCategoryName.setTextColor(Color.BLACK);
         }
