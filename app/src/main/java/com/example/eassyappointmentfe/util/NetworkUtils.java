@@ -140,7 +140,7 @@ public class NetworkUtils {
             }
         }
         System.out.println("url: " + urlString + "\n" +
-                "result" + result.toString());
+                "result: " + result.toString());
 
         return result.toString();
     }

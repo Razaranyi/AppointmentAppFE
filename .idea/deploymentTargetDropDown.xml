@@ -5,16 +5,13 @@
       <entry key="BusinessManagementActivity">
         <State />
       </entry>
-      <entry key="CreateBranchActivity">
-        <State />
-      </entry>
       <entry key="CreateBusinessActivity">
         <State />
       </entry>
-      <entry key="CreateNewEmployeeActivity">
+      <entry key="SignUpActivity">
         <State />
       </entry>
-      <entry key="SignUpActivity">
+      <entry key="mainPageActivity">
         <State />
       </entry>
     </value>

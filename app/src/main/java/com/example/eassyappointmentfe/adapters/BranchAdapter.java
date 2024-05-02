@@ -30,9 +30,9 @@ public class BranchAdapter extends RecyclerView.Adapter<BranchAdapter.BranchView
     public BranchViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(
                 parent.getContext()).inflate
-                    (R.layout.item_branch_image,
-                    parent,
-        false);
+                (R.layout.item_branch_image,
+                        parent,
+                        false);
         return new BranchViewHolder(view);
     }
 
@@ -55,12 +55,12 @@ public class BranchAdapter extends RecyclerView.Adapter<BranchAdapter.BranchView
         private final ImageView imageView;
         private final TextView branchUriTextView;
 
-      public BranchViewHolder(View itemView) {
-    super(itemView);
-    imageView = itemView.findViewById(R.id.image_branch);
-    imageView.setBackgroundResource(R.drawable.image_outline);
-    branchUriTextView = itemView.findViewById(R.id.text_uri_title);
-}
+        public BranchViewHolder(View itemView) {
+            super(itemView);
+            imageView = itemView.findViewById(R.id.image_branch);
+            imageView.setBackgroundResource(R.drawable.image_outline);
+            branchUriTextView = itemView.findViewById(R.id.text_uri_title);
+        }
 
         public void bind(Branch branch) {
             imageView.setImageURI(branch.getBranchImage());
@@ -79,4 +79,3 @@ public class BranchAdapter extends RecyclerView.Adapter<BranchAdapter.BranchView
 
 
 }
-
