@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="16dp">
+
+    <!-- Top Search Bar -->
+    <EditText
+
+        android:id="@+id/searchInput"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Search..."
+        android:drawableStart="@drawable/search_icon"
+        android:drawablePadding="10dp"
+        android:padding="12dp"
+        android:background="@drawable/search_input_background"
+    android:inputType="text"
+    android:layout_margin="8dp" />
+
+
+    <!-- Categories and Favorites RecyclerView -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rvCategories"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/searchInput"
+        android:layout_above="@+id/btnAppointments"
+        android:scrollbars="vertical" />
+
+    <!-- Appointments Button -->
+    <Button
+        android:id="@+id/btnAppointments"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:text="Appointments"
+        android:background="@color/button_color"
+        android:textColor="#FFFFFF"
+        android:padding="12dp"
+        android:textSize="18sp" />
+
+</RelativeLayout>

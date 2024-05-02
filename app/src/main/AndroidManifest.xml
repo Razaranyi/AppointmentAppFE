@@ -52,6 +52,12 @@
             android:name=".businessActivity.BusinessManagementActivity"
             android:exported="true" >
         </activity>
+
+        <!-- UserMainPageActivity -->
+        <activity
+            android:name=".userActivity.mainPageActivity"
+            android:exported="true" >
+        </activity> <!-- AppointmentActivity -->
     </application>
 
 </manifest>

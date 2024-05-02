@@ -5,6 +5,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -89,10 +90,16 @@ public class ImageUtils {
         }
     }
 
-    public static Uri getImageUri(Context inContext, Bitmap inImage, String title) {
+    public static Uri getImageUri(Context context, Bitmap image, String title) {
+        String imageFileName = title + "_" + System.currentTimeMillis() + ".jpg"; // Unique filename
         ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-        inImage.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
-        String path = MediaStore.Images.Media.insertImage(inContext.getContentResolver(), inImage, title, null);
+        image.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
+        String path = MediaStore.Images.Media.insertImage(context.getContentResolver(), image, imageFileName, null);
+        if (path == null) {
+            Log.e("getImageUri", "Failed to insert image into Media Store");
+            return null;
+        }
         return Uri.parse(path);
     }
+
 }
