@@ -4,7 +4,10 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Base64;
+import android.widget.EditText;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -25,19 +28,43 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class mainPageActivity extends AppCompatActivity {
-    List<Category> categories = new ArrayList<>();
-    CategoriesAdapter adapter;
+    private List<Category> categories = new ArrayList<>();
+    private CategoriesAdapter adapter;
+    private EditText searchInput;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_user_main_page);
         RecyclerView rvCategories = findViewById(R.id.rvCategories);
+        searchInput = findViewById(R.id.searchInput);
+
+
         rvCategories.setLayoutManager(new LinearLayoutManager(this));
         populatePage();
 
         adapter = new CategoriesAdapter(this, categories);
         rvCategories.setAdapter(adapter);
+
+        searchInput.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                // Do nothing
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                adapter.getFilter().filter(s);
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                // Do nothing
+            }
+        });
+
 
     }
 
@@ -84,14 +111,13 @@ public class mainPageActivity extends AppCompatActivity {
     private void fetchOtherCategories() {
         new Thread(() -> {
             try {
-                String response = NetworkUtils.performGetRequest(
-                        this,
+                String response = NetworkUtils.performGetRequest(this,
                         "http://10.0.2.2:8080/api/categories/get-seven",
                         true);
                 List<Category> additionalCategories = parseCategoriesAndBusinesses(response);
                 runOnUiThread(() -> {
                     categories.addAll(additionalCategories);
-                    adapter.notifyDataSetChanged();
+                    adapter.setCategories(categories); // Update the adapter's list
                 });
             } catch (Exception e) {
                 e.printStackTrace();
@@ -143,4 +169,6 @@ public class mainPageActivity extends AppCompatActivity {
             throw new RuntimeException("Error parsing business details: " + e.getMessage(), e);
         }
     }
+
+
 }
