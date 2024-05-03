@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="16dp">
+
+
+    <!-- Booking Name and Cancel Button -->
+    <TextView
+        android:id="@+id/name_text_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Booking Name"
+        android:textSize="16sp"
+        android:textColor="@android:color/black"
+        android:layout_alignParentStart="true"/>
+
+    <Button
+        android:id="@+id/cancel_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Cancel"
+        android:layout_alignParentEnd="true"/>
+
+    <!-- Appointment Time -->
+    <TextView
+        android:id="@+id/start_time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="08:00 -"
+        android:textSize="16sp"
+        android:textColor="@android:color/black"
+        android:layout_below="@id/name_text_view"
+        android:layout_alignParentStart="true"/>
+
+    <TextView
+        android:id="@+id/end_time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="08:45 AM"
+        android:textSize="16sp"
+        android:textColor="@android:color/black"
+        android:layout_toEndOf="@id/start_time"
+        android:layout_below="@id/name_text_view"/>
+</RelativeLayout>

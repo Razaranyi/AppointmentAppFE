@@ -11,6 +11,7 @@ import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Base64;
 import android.widget.Button;
@@ -20,9 +21,11 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.eassyappointmentfe.DTO.Appointment;
 import com.example.eassyappointmentfe.DTO.Branch;
 import com.example.eassyappointmentfe.DTO.ServiceProvider;
 import com.example.eassyappointmentfe.R;
+import com.example.eassyappointmentfe.adapters.AppointmentsAdapter;
 import com.example.eassyappointmentfe.adapters.BranchAdapter;
 import com.example.eassyappointmentfe.adapters.ServiceProviderAdapter;
 import com.example.eassyappointmentfe.userActivity.MainPageActivity;
@@ -46,6 +49,9 @@ public class BusinessManagementActivity extends AppCompatActivity implements Bra
     private RecyclerView serviceProviderRecyclerView;
     private BranchAdapter branchAdapter;
     private ServiceProviderAdapter serviceProviderAdapter;
+    private RecyclerView appointmentsRecyclerView;
+
+
 
     private TextView businessName;
     private TextView customerStatus;
@@ -74,6 +80,9 @@ public class BusinessManagementActivity extends AppCompatActivity implements Bra
 
         serviceProviderAdapter = new ServiceProviderAdapter(this, serviceProviders, this);
         serviceProviderRecyclerView.setAdapter(serviceProviderAdapter);
+
+        appointmentsRecyclerView = findViewById(R.id.appointmentsRecyclerView);
+        appointmentsRecyclerView.setLayoutManager(new LinearLayoutManager(this));
 
 
         setAddBranchText();
@@ -303,18 +312,29 @@ public class BusinessManagementActivity extends AppCompatActivity implements Bra
     private void fetchAppointments(long serviceProviderId) {
         new Thread(() -> {
             try {
-                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
                     String response = NetworkUtils.performGetRequest(
                             this,
                             "http://10.0.2.2:8080/api/business/"
                                     + businessId + "/branch/" + branchId + "/service-provider/"
-                                    + serviceProviderId + "/appointment/get/date/" + LocalDate.of(2024,5,6).toString(),
+                                    + serviceProviderId + "/appointment/get/date/" + LocalDate.of(2024,5,7),
                             true
                     );
-                }
+                    List<Appointment> appointments = Appointment.parseAppointments(response);
+
+                    System.out.println("Appointments: " + appointments.toString());
+                    runOnUiThread(() -> updateAppointmentsRecyclerView(appointments));
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
         }).start();
     }
+
+    private void updateAppointmentsRecyclerView(List<Appointment> appointments) {
+        if (appointmentsRecyclerView.getAdapter() == null) {
+            appointmentsRecyclerView.setAdapter(new AppointmentsAdapter(appointments));
+        } else {
+            ((AppointmentsAdapter) appointmentsRecyclerView.getAdapter()).updateData(appointments);
+        }
+    }
+
 }

@@ -192,8 +192,9 @@ public class MainPageActivity extends AppCompatActivity {
                             true
                     );
                     JSONObject jsonObject = new JSONObject(response);
-                    boolean status = jsonObject.getBoolean("success"); //just one day the status field was not added to this message anymore and I had to use the success instead
-                    if (status) {
+                    System.out.println("Response: " + jsonObject.toString());
+                    int status = jsonObject.getInt("status"); // success or status?!?!?!
+                    if (status == HttpURLConnection.HTTP_OK) {
                         Intent intent = new Intent(MainPageActivity.this, BusinessManagementActivity.class);
                         intent.putExtra("businessId", NetworkUtils.processResponse(jsonObject, "id"));
                         intent.putExtra("businessName", NetworkUtils.processResponse(jsonObject, "name"));

@@ -38,157 +38,144 @@
             android:textSize="24sp" />
     </LinearLayout>
 
-    <RelativeLayout
-        android:id="@+id/branchesHeaderContainer"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/headerSection"
-        android:layout_marginTop="20dp"
-        android:clickable="false">
-
-        <TextView
-            android:id="@+id/branchesHeader"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentStart="true"
-            android:text="Branches"
-            android:textSize="20sp"
-            android:textStyle="bold"/>
-
-        <Button
-            android:id="@+id/addBranchText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignBaseline="@+id/branchesHeader"
-            android:layout_alignParentEnd="true"
-            android:layout_marginEnd="-5dp"
-            android:background="@android:color/transparent"
-            android:text="Add"
-            android:textColor="@color/button_color"
-            android:textSize="18sp"
-            android:textStyle="bold" />
-    </RelativeLayout>
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/branchesRecyclerView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/branchesHeaderContainer"
-        android:layout_marginTop="10dp"
-        android:orientation="horizontal"
-        tools:listitem="@layout/item_branch_image" />
-
-    <!-- Horizontal ScrollView for Branch Images -->
-    <HorizontalScrollView
-        android:id="@+id/branchesScrollView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/branchesRecyclerView"
-        android:layout_marginTop="10dp">
-
-        <LinearLayout
-            android:id="@+id/branchesContainer"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-            <!-- Dynamically added ImageView go here -->
-            <!-- Placeholder for Branch Images -->
-        </LinearLayout>
-    </HorizontalScrollView>
-
-    <!-- Service Provider Header -->
-    <RelativeLayout
-        android:id="@+id/serviceProviderHeaderContainer"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/branchesScrollView"
-        android:layout_marginTop="20dp"
-        android:clickable="false">
-
-    <TextView
-            android:id="@+id/serviceProviderHeader"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentStart="true"
-            android:text="Service Providers"
-            android:textSize="20sp"
-            android:textStyle="bold"/>
-
-        <Button
-            android:id="@+id/addServiceProviderText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignBaseline="@+id/serviceProviderHeader"
-            android:layout_alignParentEnd="true"
-            android:layout_marginEnd="-5dp"
-            android:background="@android:color/transparent"
-            android:text="Add"
-            android:textColor="@color/button_color"
-            android:textSize="18sp"
-            android:textStyle="bold" />
-    </RelativeLayout>
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/serviceProviderRecyclerView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/serviceProviderHeaderContainer"
-        android:layout_marginTop="10dp"
-        android:orientation="horizontal"
-        tools:listitem="@layout/item_service_provider_image" />
-
-    <!-- Horizontal ScrollView for Service Provider Images -->
-    <HorizontalScrollView
-        android:id="@+id/serviceProviderScrollView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/serviceProviderRecyclerView"
-
-        android:layout_marginTop="10dp">
-
-        <LinearLayout
-            android:id="@+id/serviceProviderContainer"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-            <!-- Dynamically added ImageView go here -->
-            <!-- Placeholder for Service Provider Images -->
-        </LinearLayout>
-    </HorizontalScrollView>
-
-    <Button
-        android:id="@+id/appointmentsButton"
-        android:layout_width="321dp"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginBottom="15dp"
-        android:backgroundTint="#AAB57AF4"
-        android:gravity="center"
-        android:padding="12dp"
-        android:text="Appointments"
-        android:textColor="#FFFFFF"
-        android:textSize="18sp" />
-
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_above="@id/appointmentsButton"
-        android:layout_below="@id/serviceProviderRecyclerView"
-        android:layout_marginTop="-7dp"
-        android:layout_marginBottom="6dp">
+        android:layout_height="match_parent"
+        android:layout_below="@id/headerSection">
 
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/appointmentsRecyclerView"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+            <!-- All your other views go here -->
 
+            <RelativeLayout
+                android:id="@+id/branchesHeaderContainer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp">
+
+                <TextView
+                    android:id="@+id/branchesHeader"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentStart="true"
+                    android:text="Branches"
+                    android:textSize="20sp"
+                    android:textStyle="bold"/>
+
+                <Button
+                    android:id="@+id/addBranchText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignBaseline="@+id/branchesHeader"
+                    android:layout_alignParentEnd="true"
+                    android:layout_marginEnd="-5dp"
+                    android:background="@android:color/transparent"
+                    android:text="Add"
+                    android:textColor="@color/button_color"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
+            </RelativeLayout>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/branchesRecyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/branchesHeaderContainer"
+                android:layout_marginTop="10dp"
+                android:orientation="horizontal"
+                tools:listitem="@layout/item_branch_image" />
+
+            <RelativeLayout
+                android:id="@+id/serviceProviderHeaderContainer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/branchesRecyclerView"
+                android:layout_marginTop="20dp">
+
+                <TextView
+                    android:id="@+id/serviceProviderHeader"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentStart="true"
+                    android:text="Service Providers"
+                    android:textSize="20sp"
+                    android:textStyle="bold"/>
+
+                <Button
+                    android:id="@+id/addServiceProviderText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignBaseline="@+id/serviceProviderHeader"
+                    android:layout_alignParentEnd="true"
+                    android:layout_marginEnd="-5dp"
+                    android:background="@android:color/transparent"
+                    android:text="Add"
+                    android:textColor="@color/button_color"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
+            </RelativeLayout>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/serviceProviderRecyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/serviceProviderHeaderContainer"
+                android:layout_marginTop="10dp"
+                android:orientation="horizontal"
+                tools:listitem="@layout/item_service_provider_image" />
+
+            <ScrollView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/serviceProviderRecyclerView"
+                android:layout_marginTop="10dp">
+
+
+
+
+<!--                android:drawableEnd="@drawable/ic_calendar"-->
+
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:id="@+id/tvDate"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Select Date"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                        android:padding="16dp"
+                        android:layout_below="@id/serviceProviderRecyclerView"
+                        android:layout_marginTop="10dp"/>
+
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/appointmentsRecyclerView"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/tvDate"
+                        android:orientation="vertical"/>
+                </RelativeLayout>
+            </ScrollView>
 
         </RelativeLayout>
     </ScrollView>
+
+    <Button
+        android:id="@+id/appointmentsButton"
+        android:layout_width="321dp"
+        android:visibility="gone"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="15dp"
+        android:backgroundTint="#AAB57AF4"
+        android:text="Appointments"
+        android:textColor="#FFFFFF"
+        android:textSize="18sp" />
 
 </RelativeLayout>

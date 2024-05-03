@@ -24,7 +24,7 @@ import java.util.List;
 import java.util.Locale;
 
 public class BreakTimeBottomSheetDialogFragment extends DialogFragment {
-
+//TODO: fix bug of empty break times being added to the list
     public static final String SHARED_PREFS_NAME = "BreakPrefs";
     public static final String BREAKS_KEY = "breaks";
 
