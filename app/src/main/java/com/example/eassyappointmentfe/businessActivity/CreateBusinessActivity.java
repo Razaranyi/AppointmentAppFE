@@ -27,6 +27,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.util.ArrayList;
 import java.util.List;
@@ -94,7 +96,12 @@ public class CreateBusinessActivity extends AppCompatActivity {
      */
     private void fetchCategories() {
         new Thread(() -> {
-            String response = NetworkUtils.performGetRequest(this,"http://10.0.2.2:8080/api/categories/all", true);
+            String response = null;
+            try {
+                response = NetworkUtils.performGetRequest(this,"http://10.0.2.2:8080/api/categories/all", true);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
             List<Category> categoryList = parseCategories(response);
             List<String> categoryNames = categoryList.stream()
                     .map(Category::getName)

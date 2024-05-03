@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools" >
-    <!-- Add the INTERNET permission -->
+    <!--INTERNET permission -->
     <uses-permission android:name="android.permission.INTERNET" />
 
     <application
@@ -55,7 +55,7 @@
 
         <!-- UserMainPageActivity -->
         <activity
-            android:name=".userActivity.mainPageActivity"
+            android:name=".userActivity.MainPageActivity"
             android:exported="true" >
         </activity> <!-- AppointmentActivity -->
     </application>

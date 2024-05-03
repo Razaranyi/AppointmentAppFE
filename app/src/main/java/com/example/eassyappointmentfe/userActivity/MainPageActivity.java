@@ -1,5 +1,6 @@
 package com.example.eassyappointmentfe.userActivity;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
@@ -8,6 +9,7 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Base64;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -17,6 +19,8 @@ import com.example.eassyappointmentfe.DTO.Business;
 import com.example.eassyappointmentfe.DTO.Category;
 import com.example.eassyappointmentfe.R;
 import com.example.eassyappointmentfe.adapters.CategoriesAdapter;
+import com.example.eassyappointmentfe.businessActivity.BusinessManagementActivity;
+import com.example.eassyappointmentfe.businessActivity.CreateBusinessActivity;
 import com.example.eassyappointmentfe.util.ImageUtils;
 import com.example.eassyappointmentfe.util.NetworkUtils;
 
@@ -24,13 +28,17 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.IOException;
+import java.net.HttpURLConnection;
 import java.util.ArrayList;
 import java.util.List;
 
-public class mainPageActivity extends AppCompatActivity {
+public class MainPageActivity extends AppCompatActivity {
+
     private List<Category> categories = new ArrayList<>();
     private CategoriesAdapter adapter;
     private EditText searchInput;
+    private TextView customerStatus;
 
 
     @Override
@@ -40,6 +48,9 @@ public class mainPageActivity extends AppCompatActivity {
         setContentView(R.layout.activity_user_main_page);
         RecyclerView rvCategories = findViewById(R.id.rvCategories);
         searchInput = findViewById(R.id.searchInput);
+        customerStatus = findViewById(R.id.customerStatus);
+        setUpCustomerStatus();
+
 
 
         rvCategories.setLayoutManager(new LinearLayoutManager(this));
@@ -47,6 +58,7 @@ public class mainPageActivity extends AppCompatActivity {
 
         adapter = new CategoriesAdapter(this, categories);
         rvCategories.setAdapter(adapter);
+
 
         searchInput.addTextChangedListener(new TextWatcher() {
             @Override
@@ -82,7 +94,7 @@ public class mainPageActivity extends AppCompatActivity {
                 List<Business> favoriteBusinesses = new ArrayList<>();
                 for (int i = 0; i < favoriteBusinessesJsonArray.length(); i++) {
                     long businessId = favoriteBusinessesJsonArray.getJSONObject(i).getLong("businessId");
-                    favoriteBusinesses.add(fetchBusinessById(businessId,true));
+                    favoriteBusinesses.add(fetchBusinessById(businessId, true));
                 }
 
                 runOnUiThread(() -> {
@@ -99,7 +111,7 @@ public class mainPageActivity extends AppCompatActivity {
         }).start();
     }
 
-    private Business fetchBusinessById(long businessId,boolean isFavorite) throws JSONException {
+    private Business fetchBusinessById(long businessId, boolean isFavorite) throws JSONException, IOException {
         String response = NetworkUtils.performGetRequest(
                 this,
                 "http://10.0.2.2:8080/api/business/get-business-by-id/" + businessId,
@@ -147,9 +159,9 @@ public class mainPageActivity extends AppCompatActivity {
         try {
             for (int i = 0; i < businessIdsJsonArray.length(); i++) {
                 long businessId = businessIdsJsonArray.getLong(i);
-                businesses.add(fetchBusinessById(businessId,false));
+                businesses.add(fetchBusinessById(businessId, false));
             }
-        } catch (JSONException e) {
+        } catch (JSONException | IOException e) {
             e.printStackTrace();
             throw new RuntimeException("Error parsing business details: " + e.getMessage(), e);
         }
@@ -170,5 +182,35 @@ public class mainPageActivity extends AppCompatActivity {
         }
     }
 
-
+    private void setUpCustomerStatus() {
+        customerStatus.setOnClickListener(v -> {
+            new Thread(() -> {
+                try {
+                    String response = NetworkUtils.performGetRequest(
+                            this,
+                            "http://10.0.2.2:8080/api/business/my-business",
+                            true
+                    );
+                    JSONObject jsonObject = new JSONObject(response);
+                    int status = jsonObject.getInt("status");
+                    if (status == HttpURLConnection.HTTP_OK) {
+                        Intent intent = new Intent(MainPageActivity.this, BusinessManagementActivity.class);
+                        intent.putExtra("businessId", NetworkUtils.processResponse(jsonObject, "id"));
+                        intent.putExtra("businessName", NetworkUtils.processResponse(jsonObject, "name"));
+                        startActivity(intent);
+                    }else {
+                        String errorMessage = jsonObject.getString("message");
+                        if (errorMessage.contains("Resource not found: Business not found")) {
+                        Intent intent = new Intent(MainPageActivity.this, CreateBusinessActivity.class);
+                        startActivity(intent);
+                    } else {
+                        throw new RuntimeException("Error fetching business details: " + errorMessage);
+                    }
+                }
+                } catch (JSONException | IOException e) {
+                    throw new RuntimeException(e);
+                }
+            }).start();
+        });
+    }
 }

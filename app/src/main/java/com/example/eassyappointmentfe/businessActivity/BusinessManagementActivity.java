@@ -13,7 +13,6 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Base64;
-import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
@@ -26,12 +25,14 @@ import com.example.eassyappointmentfe.DTO.ServiceProvider;
 import com.example.eassyappointmentfe.R;
 import com.example.eassyappointmentfe.adapters.BranchAdapter;
 import com.example.eassyappointmentfe.adapters.ServiceProviderAdapter;
+import com.example.eassyappointmentfe.userActivity.MainPageActivity;
 import com.example.eassyappointmentfe.util.ImageUtils;
 import com.example.eassyappointmentfe.util.NetworkUtils;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -45,6 +46,7 @@ public class BusinessManagementActivity extends AppCompatActivity implements Bra
     private ServiceProviderAdapter serviceProviderAdapter;
 
     private TextView businessName;
+    private TextView customerStatus;
     private Button addBranchText;
     private Button addServiceProviderText;
     private Button appointmentButton;
@@ -75,6 +77,7 @@ public class BusinessManagementActivity extends AppCompatActivity implements Bra
         setAddBranchText();
         setUpAppointmentsButton(); //to be removed
         setAddServiceProviderText();
+        setUpCustomerStatus();
 
     }
 
@@ -88,6 +91,7 @@ public class BusinessManagementActivity extends AppCompatActivity implements Bra
         appointmentButton = findViewById(R.id.appointmentsButton);
         branchRecyclerView = findViewById(R.id.branchesRecyclerView);
         serviceProviderRecyclerView = findViewById(R.id.serviceProviderRecyclerView);
+        customerStatus = findViewById(R.id.customerStatus);
     }
 
     private void fetchBranches() {
@@ -95,10 +99,15 @@ public class BusinessManagementActivity extends AppCompatActivity implements Bra
            businessId = NetworkUtils.getBusinessId(this);
         }
         new Thread(() -> {
-            String response = NetworkUtils.performGetRequest(
-                    this,
-                    "http://10.0.2.2:8080/api/business/" + businessId + "/branch/get-all",
-                    true);
+            String response = null;
+            try {
+                response = NetworkUtils.performGetRequest(
+                        this,
+                        "http://10.0.2.2:8080/api/business/" + businessId + "/branch/get-all",
+                        true);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
             branches = parseBranches(response);
             if (branches.isEmpty()) {
                 return;
@@ -119,10 +128,15 @@ public class BusinessManagementActivity extends AppCompatActivity implements Bra
             if (branchId == null){
                 branchId = String.valueOf(branches.get(0).getId());
             }
-            String response = NetworkUtils.performGetRequest(
-                    this,
-                    "http://10.0.2.2:8080/api/business/" + businessId + "/" + branchId + "/service-provider/get-all",
-                    true);
+            String response = null;
+            try {
+                response = NetworkUtils.performGetRequest(
+                        this,
+                        "http://10.0.2.2:8080/api/business/" + businessId + "/" + branchId + "/service-provider/get-all",
+                        true);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
             serviceProviders = parseServiceProviders(response);
 
             if (serviceProviders.isEmpty()) {
@@ -263,6 +277,14 @@ public class BusinessManagementActivity extends AppCompatActivity implements Bra
 //            startActivity(intent);
         });
     }
+
+    private void setUpCustomerStatus() {
+        customerStatus.setOnClickListener(v -> {
+            Intent intent = new Intent(BusinessManagementActivity.this, MainPageActivity.class);
+            startActivity(intent);
+        });
+    }
+
 
     @Override
     public void onBranchClick(Branch branch) {
