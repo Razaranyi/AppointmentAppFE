@@ -178,12 +178,15 @@
         android:layout_marginTop="-7dp"
         android:layout_marginBottom="6dp">
 
-        <!-- All your scrollable content goes here -->
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <!-- Content like RecyclerViews, TextViews goes here -->
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/appointmentsRecyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
 
         </RelativeLayout>
     </ScrollView>

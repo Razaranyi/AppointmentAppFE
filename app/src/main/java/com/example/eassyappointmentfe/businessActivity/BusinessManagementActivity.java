@@ -33,10 +33,12 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
-public class BusinessManagementActivity extends AppCompatActivity implements BranchAdapter.OnBranchClickListener {
+public class BusinessManagementActivity extends AppCompatActivity implements BranchAdapter.OnBranchClickListener,ServiceProviderAdapter.OnServiceProviderClickListener {
 
     private String businessId;
     private String branchId;
@@ -70,7 +72,7 @@ public class BusinessManagementActivity extends AppCompatActivity implements Bra
         setUpServiceProvidersRecyclerView();
         fetchServiceProviders();
 
-        serviceProviderAdapter = new ServiceProviderAdapter(this, serviceProviders);
+        serviceProviderAdapter = new ServiceProviderAdapter(this, serviceProviders, this);
         serviceProviderRecyclerView.setAdapter(serviceProviderAdapter);
 
 
@@ -233,7 +235,7 @@ public class BusinessManagementActivity extends AppCompatActivity implements Bra
     }
 
     private void updateServiceProviders(List<ServiceProvider> newServiceProviders) {
-        serviceProviderAdapter = new ServiceProviderAdapter(this, newServiceProviders);
+        serviceProviderAdapter = new ServiceProviderAdapter(this, newServiceProviders, this);
         serviceProviderRecyclerView.setAdapter(serviceProviderAdapter);
     }
 
@@ -290,5 +292,29 @@ public class BusinessManagementActivity extends AppCompatActivity implements Bra
     public void onBranchClick(Branch branch) {
         branchId = String.valueOf(branch.getId());
         fetchServiceProviders();
+    }
+
+
+    @Override
+    public void onServiceProviderClick(long serviceProviderId) {
+        fetchAppointments(serviceProviderId);
+    }
+
+    private void fetchAppointments(long serviceProviderId) {
+        new Thread(() -> {
+            try {
+                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+                    String response = NetworkUtils.performGetRequest(
+                            this,
+                            "http://10.0.2.2:8080/api/business/"
+                                    + businessId + "/branch/" + branchId + "/service-provider/"
+                                    + serviceProviderId + "/appointment/get/date/" + LocalDate.of(2024,5,6).toString(),
+                            true
+                    );
+                }
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }).start();
     }
 }
