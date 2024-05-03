@@ -2,7 +2,26 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="16dp">
+    android:padding="32dp">
+
+    <LinearLayout
+        android:id="@+id/headerSection"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center_vertical">
+
+    <TextView
+        android:id="@+id/customerStatus"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end"
+        android:text="I'm a Business"
+        android:clickable="true"
+        android:focusable="true"
+        android:textColor="@color/button_color"/>
+
+    </LinearLayout>
 
     <!-- Top Search Bar -->
     <EditText
@@ -13,6 +32,7 @@
         android:hint="Search..."
         android:drawableStart="@drawable/search_icon"
         android:drawablePadding="10dp"
+        android:layout_below="@+id/headerSection"
         android:padding="12dp"
         android:background="@drawable/search_input_background"
     android:inputType="text"

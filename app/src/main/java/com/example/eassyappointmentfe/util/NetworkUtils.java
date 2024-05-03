@@ -11,6 +11,7 @@ import org.json.JSONObject;
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -108,7 +109,7 @@ public class NetworkUtils {
      * @return A string containing the response body.
      */
 
-    public static String performGetRequest(Context context, String urlString, boolean isTokenRequired) {
+    public static String performGetRequest(Context context, String urlString, boolean isTokenRequired) throws IOException {
         HttpURLConnection urlConnection = null;
         StringBuilder result = new StringBuilder();
         System.out.println("perform get request method" +
@@ -122,25 +123,26 @@ public class NetworkUtils {
             urlConnection.setRequestProperty("Accept", "application/json");
             if (isTokenRequired) {
                 urlConnection.setRequestProperty("Authorization", "Bearer " + TokenManager.getToken(context));
-                System.out.println("Bearer " + TokenManager.getToken(context));
             }
             urlConnection.connect();
 
-            InputStream in = new BufferedInputStream(urlConnection.getInputStream());
+            InputStream in;
+            if (urlConnection.getResponseCode() == HttpURLConnection.HTTP_OK) {
+                in = new BufferedInputStream(urlConnection.getInputStream());
+            } else {
+                in = new BufferedInputStream(urlConnection.getErrorStream());
+            }
+
             BufferedReader reader = new BufferedReader(new InputStreamReader(in));
             String line;
             while ((line = reader.readLine()) != null) {
                 result.append(line);
             }
-        } catch (IOException e) {
-            e.printStackTrace();
         } finally {
             if (urlConnection != null) {
                 urlConnection.disconnect();
             }
         }
-        System.out.println("url: " + urlString + "\n" +
-                "result: " + result.toString());
 
         return result.toString();
     }

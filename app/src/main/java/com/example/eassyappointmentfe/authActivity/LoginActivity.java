@@ -18,6 +18,7 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.eassyappointmentfe.R;
+import com.example.eassyappointmentfe.userActivity.MainPageActivity;
 import com.example.eassyappointmentfe.util.NetworkUtils;
 
 import org.json.JSONException;
@@ -90,6 +91,8 @@ public class LoginActivity extends AppCompatActivity {
                 String token = responseBody.getString("token");
                 saveToken(this, token);
                 showToast(getString(R.string.login_success));
+                Intent intent = new Intent(LoginActivity.this, MainPageActivity.class);
+                startActivity(intent);
             } else {
                 String message = responseBody.getString("message");
                 showToast(message);

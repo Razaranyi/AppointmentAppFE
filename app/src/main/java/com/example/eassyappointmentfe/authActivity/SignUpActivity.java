@@ -18,6 +18,7 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.eassyappointmentfe.R;
+import com.example.eassyappointmentfe.userActivity.MainPageActivity;
 import com.example.eassyappointmentfe.util.NetworkUtils;
 
 import org.json.JSONException;
@@ -91,6 +92,8 @@ public class SignUpActivity extends AppCompatActivity {
                 String token = response.getJSONObject("response").getString("token");
                 saveToken(this, token);
                 showToast(message);
+                Intent intent = new Intent(SignUpActivity.this, MainPageActivity.class);
+                startActivity(intent);
             } else {
                 showToast(message);
             }
