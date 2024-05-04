@@ -47,9 +47,11 @@ public class Appointment {
                         new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.getDefault()).parse(jsonObject.getString("startTime")),
                         new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.getDefault()).parse(jsonObject.getString("endTime")),
                         jsonObject.getBoolean("isAvailable"),
-                        jsonObject.getLong("bookingId"),
-                        jsonObject.getLong("serviceProviderId")
+                        jsonObject.getLong("serviceProviderId"),
+                        jsonObject.getLong("bookingId")
                 );
+
+                System.out.println("parsed appointment: " + appointment.toString());
                 appointments.add(appointment);
             }
         } catch (JSONException | ParseException e) {
@@ -80,5 +82,17 @@ public class Appointment {
 
     public Long getBookingId() {
         return bookingId;
+    }
+
+    @Override
+    public String toString() {
+        return "Appointment{" +
+                "id=" + id +
+                ", startTime=" + startTime +
+                ", endTime=" + endTime +
+                ", isAvailable=" + isAvailable +
+                ", serviceProviderId=" + serviceProviderId +
+                ", bookingId=" + bookingId +
+                '}';
     }
 }

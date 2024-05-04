@@ -86,7 +86,7 @@ public class MainPageActivity extends AppCompatActivity {
                 // Fetch favorites first
                 String favoritesResponse = NetworkUtils.performGetRequest(
                         this,
-                        "http://10.0.2.2:8080/api/favorites/my-favorites",
+                        "favorites/my-favorites",
                         true);
                 JSONObject favoritesJson = new JSONObject(favoritesResponse);
                 JSONArray favoriteBusinessesJsonArray = favoritesJson.getJSONArray("data");
@@ -114,7 +114,7 @@ public class MainPageActivity extends AppCompatActivity {
     private Business fetchBusinessById(long businessId, boolean isFavorite) throws JSONException, IOException {
         String response = NetworkUtils.performGetRequest(
                 this,
-                "http://10.0.2.2:8080/api/business/get-business-by-id/" + businessId,
+                "business/get-business-by-id/" + businessId,
                 true);
         JSONObject jsonObject = new JSONObject(response);
         return parseBusiness(jsonObject.getJSONObject("data"), isFavorite);
@@ -124,7 +124,7 @@ public class MainPageActivity extends AppCompatActivity {
         new Thread(() -> {
             try {
                 String response = NetworkUtils.performGetRequest(this,
-                        "http://10.0.2.2:8080/api/categories/get-all",
+                        "categories/get-all",
                         true);
                 List<Category> additionalCategories = parseCategoriesAndBusinesses(response);
                 runOnUiThread(() -> {
@@ -188,7 +188,7 @@ public class MainPageActivity extends AppCompatActivity {
                 try {
                     String response = NetworkUtils.performGetRequest(
                             this,
-                            "http://10.0.2.2:8080/api/business/my-business",
+                            "business/my-business",
                             true
                     );
                     JSONObject jsonObject = new JSONObject(response);

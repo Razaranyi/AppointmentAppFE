@@ -175,7 +175,7 @@ public class CreateNewEmployeeActivity extends AppCompatActivity {
         Thread thread = new Thread(() -> {
             JSONObject response = NetworkUtils.performPostRequest(
                     this,
-                    "http://10.0.2.2:8080/api/business/" + businessId + "/" + branchId + "/service-provider/create",
+                    "business/" + businessId + "/" + branchId + "/service-provider/create",
                     employeeData,
                     true
             );

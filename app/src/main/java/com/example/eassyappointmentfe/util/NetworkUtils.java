@@ -27,22 +27,25 @@ import java.util.concurrent.Future;
 public class NetworkUtils {
 
     private static final String TAG = "NetworkUtil";
+    private static final String BASE_URL = "http://10.0.2.2:8080/api/";
+
 
     /**
      * Performs a POST request to the specified URL with the provided JSON data.
      *
-     * @param urlString The URL to send the POST request to.
+     * @param uri The URL to send the POST request to.
      * @param postData  The JSON object containing the data to be sent with the request.
      * @param isTokenRequired A boolean indicating whether the request requires a token.
      * @return A JSONObject containing the response code and the response body.
      */
-    public static JSONObject performPostRequest(Context context, String urlString, JSONObject postData, boolean isTokenRequired) {
+    public static JSONObject performPostRequest(Context context, String uri, JSONObject postData, boolean isTokenRequired) {
         System.out.println("perform post request method" +
-                        "\n url: " + urlString );
+                        "\n url: " + uri );
         HttpURLConnection connection = null;
         JSONObject responseJson = new JSONObject();
+        String finalUrl = BASE_URL + uri;
         try {
-            URL url = new URL(urlString);
+            URL url = new URL(finalUrl);
 
             // Open the connection and set the request method to POST.
             connection = (HttpURLConnection) url.openConnection();
@@ -72,7 +75,7 @@ public class NetworkUtils {
             // Read the input stream into a string buffer.
             BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
             String inputLine;
-            StringBuffer response = new StringBuffer();
+            StringBuilder response = new StringBuilder();
             while ((inputLine = reader.readLine()) != null) {
                 response.append(inputLine);
             }
@@ -101,21 +104,78 @@ public class NetworkUtils {
         return responseJson;
     }
 
+    // had to change configuration in spring boot to allow it not across HTTPS but HTTP, therefore its not in used but cancelling booking can be done here theoretically
+    public static JSONObject performDeleteRequest(Context context, String uri) {
+        System.out.println("perform delete request method" +
+                "\n url: " + uri);
+        String URL = BASE_URL + uri;
+
+        HttpURLConnection connection = null;
+        JSONObject responseJson = new JSONObject();
+        try {
+            URL url = new URL(URL);
+
+            // Open the connection and set the request method to DELETE.
+            connection = (HttpURLConnection) url.openConnection();
+            connection.setRequestMethod("DELETE");
+
+            // Set the headers to accept and send JSON.
+            connection.setRequestProperty("Content-Type", "application/json");
+            connection.setRequestProperty("Accept", "application/json");
+            connection.setRequestProperty("Authorization", "Bearer " + TokenManager.getToken(context));
+
+            int responseCode = connection.getResponseCode();
+            // Choose the appropriate stream based on the response code.
+            InputStream inputStream = responseCode <= HttpURLConnection.HTTP_OK ?
+                    connection.getInputStream() : connection.getErrorStream();
+
+            // Read the input stream into a string buffer.
+            BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
+            String inputLine;
+            StringBuilder response = new StringBuilder();
+            while ((inputLine = reader.readLine()) != null) {
+                response.append(inputLine);
+            }
+            reader.close();
+
+            // Place the response code and body into a JSON object.
+            responseJson.put("status", responseCode);
+            responseJson.put("response", new JSONObject(response.toString()));
+
+        } catch (Exception e) {
+            // Handle any exceptions and put an error message into the response JSON.
+            try {
+                responseJson.put("status", 500);
+                responseJson.put("response", new JSONObject().put("message", "Error connecting to server."));
+            } catch (JSONException jsonException) {
+                Log.e(TAG, "JSON Exception: ", jsonException);
+            }
+            Log.e(TAG, "Network Exception: ", e);
+        } finally {
+            // Disconnect the connection to free up resources.
+            if (connection != null) {
+                connection.disconnect();
+            }
+        }
+        return responseJson;
+    }
+
     /**
      * Performs a GET request to the specified URL.
      *
-     * @param urlString The URL to send the GET request to.
+     * @param uri The URL to send the GET request to.
      * @param isTokenRequired A boolean indicating whether the request requires a token.
      * @return A string containing the response body.
      */
 
-    public static String performGetRequest(Context context, String urlString, boolean isTokenRequired) throws IOException {
+    public static String performGetRequest(Context context, String uri, boolean isTokenRequired) throws IOException {
         HttpURLConnection urlConnection = null;
         StringBuilder result = new StringBuilder();
         System.out.println("perform get request method" +
-                "\n url: " + urlString);
+                "\n url: " + uri);
+        String finalUrl = BASE_URL + uri;
         try {
-            URL url = new URL(urlString);
+            URL url = new URL(finalUrl);
             urlConnection = (HttpURLConnection) url.openConnection();
             urlConnection.setRequestMethod("GET");
             urlConnection.setConnectTimeout(15000);
@@ -152,7 +212,7 @@ public class NetworkUtils {
         Future<String> result = executor.submit(() -> {
             return NetworkUtils.performGetRequest(
                     context,
-                    "http://10.0.2.2:8080/api/business/get-id",
+                    "business/get-id",
                     true
             );
         });
@@ -213,6 +273,7 @@ public class NetworkUtils {
         }
         return resultSet;
     }
+
 
 
 }
