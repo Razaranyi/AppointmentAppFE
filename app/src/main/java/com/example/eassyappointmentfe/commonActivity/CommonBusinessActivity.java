@@ -72,7 +72,7 @@ public class CommonBusinessActivity extends AppCompatActivity implements BranchA
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_business_management);
+        setContentView(R.layout.activity_common_business);
         Intent intent = getIntent();
 
         initialize(intent);
@@ -132,7 +132,7 @@ public class CommonBusinessActivity extends AppCompatActivity implements BranchA
             try {
                 response = NetworkUtils.performGetRequest(
                         this,
-                        "http://10.0.2.2:8080/api/business/" + businessId + "/branch/get-all",
+                        "business/" + businessId + "/branch/get-all",
                         true);
             } catch (IOException e) {
                 throw new RuntimeException(e);
@@ -161,7 +161,7 @@ public class CommonBusinessActivity extends AppCompatActivity implements BranchA
             try {
                 response = NetworkUtils.performGetRequest(
                         this,
-                        "http://10.0.2.2:8080/api/business/" + businessId + "/" + branchId + "/service-provider/get-all",
+                        "business/" + businessId + "/" + branchId + "/service-provider/get-all",
                         true);
             } catch (IOException e) {
                 throw new RuntimeException(e);
@@ -349,7 +349,7 @@ public class CommonBusinessActivity extends AppCompatActivity implements BranchA
             try {
                 String response = NetworkUtils.performGetRequest(
                         this,
-                        "http://10.0.2.2:8080/api/business/"
+                        "business/"
                                 + businessId + "/branch/" + branchId + "/service-provider/"
                                 + serviceProviderId + "/appointment/get/date/" + date,
                         true

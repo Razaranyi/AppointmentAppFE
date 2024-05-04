@@ -19,8 +19,9 @@ public class Appointment {
     private Boolean isAvailable;
     private Long serviceProviderId;
     private Long bookingId;
+    private String bookingUserName;
 
-    public Appointment(Long id, Date startTime, Date endTime, Boolean isAvailable, Long serviceProviderId, Long bookingId) {
+    public Appointment(Long id, Date startTime, Date endTime, Boolean isAvailable, Long serviceProviderId, Long bookingId,String bookingUserName) {
         this.id = id;
         this.startTime = startTime;
         this.endTime = endTime;
@@ -29,10 +30,15 @@ public class Appointment {
         if (bookingId != null) {
             this.bookingId = bookingId;
         }
+        if (bookingUserName != null) {
+            this.bookingUserName = bookingUserName;
+        }
+
     }
 
     public static List<Appointment> parseAppointments(String jsonResponse) {
         List<Appointment> appointments = new ArrayList<>();
+        String bookingUserName = null;
         try {
             JSONArray jsonArray = new JSONArray(jsonResponse);
             for (int i = 0; i < jsonArray.length(); i++) {
@@ -42,14 +48,22 @@ public class Appointment {
                 if (jsonObject.getBoolean("isAvailable")) {
                     jsonObject.put("bookingId", 0);
                 }
+                if (jsonObject.has("bookingUserName")) {
+                  bookingUserName =   jsonObject.getString("bookingUserName");
+                }
                 Appointment appointment = new Appointment(
                         jsonObject.getLong("id"),
                         new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.getDefault()).parse(jsonObject.getString("startTime")),
                         new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.getDefault()).parse(jsonObject.getString("endTime")),
                         jsonObject.getBoolean("isAvailable"),
+                        jsonObject.getLong("serviceProviderId"),
                         jsonObject.getLong("bookingId"),
-                        jsonObject.getLong("serviceProviderId")
+                        bookingUserName
+
+
                 );
+
+                System.out.println("parsed appointment: " + appointment.toString());
                 appointments.add(appointment);
             }
         } catch (JSONException | ParseException e) {
@@ -78,7 +92,20 @@ public class Appointment {
         return serviceProviderId;
     }
 
-    public Long getBookingId() {
-        return bookingId;
+
+    public String getBookingUserName() {
+        return bookingUserName;
+    }
+
+    @Override
+    public String toString() {
+        return "Appointment{" +
+                "id=" + id +
+                ", startTime=" + startTime +
+                ", endTime=" + endTime +
+                ", isAvailable=" + isAvailable +
+                ", serviceProviderId=" + serviceProviderId +
+                ", bookingId=" + bookingId +
+                '}';
     }
 }

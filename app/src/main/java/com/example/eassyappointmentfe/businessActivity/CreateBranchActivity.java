@@ -52,16 +52,12 @@ public class CreateBranchActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_branch);
+
         Intent intent = getIntent();
-
-
-            businessId = intent.getStringExtra("businessId");
-            System.out.println("Starting branch activity, Business ID: " + businessId);
-
+        businessId = intent.getStringExtra("businessId");
 
         initializeViews();
         setUpCreateBranchButton();
-
     }
 
     private void initializeViews() {
@@ -108,7 +104,7 @@ public class CreateBranchActivity extends AppCompatActivity {
             new Thread(() -> {
                 String response = String.valueOf(NetworkUtils.performPostRequest(
                         this,
-                        "http://10.0.2.2:8080/api/business/" + businessId + "/branch/create",
+                        "business/" + businessId + "/branch/create",
                         rootObject,
                         true
                 ));
@@ -147,7 +143,7 @@ public class CreateBranchActivity extends AppCompatActivity {
         Future<String> result = executor.submit(() -> {
             return NetworkUtils.performGetRequest(
                     this,
-                    "http://10.0.2.2:8080/api/business/get-id",
+                    "business/get-id",
                     true
             );
         });

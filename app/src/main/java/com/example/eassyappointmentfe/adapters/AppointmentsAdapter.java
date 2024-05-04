@@ -12,8 +12,14 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.eassyappointmentfe.DTO.Appointment;
 import com.example.eassyappointmentfe.R;
+import com.example.eassyappointmentfe.util.NetworkUtils;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Locale;
 
@@ -37,6 +43,9 @@ public class AppointmentsAdapter extends RecyclerView.Adapter<AppointmentsAdapte
     @Override
     public void onBindViewHolder(@NonNull AppointmentViewHolder holder, int position) {
         Appointment appointment = appointments.get(position);
+        if (appointment == null) {
+            appointment = appointments.get(0);
+        }
         SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm", Locale.getDefault());
         holder.startTimeTextView.setText(timeFormat.format(appointment.getStartTime())+ " - ");
         holder.endTimeTextView.setText(timeFormat.format(appointment.getEndTime()));
@@ -50,9 +59,13 @@ public class AppointmentsAdapter extends RecyclerView.Adapter<AppointmentsAdapte
                 holder.cancelOrBookButton.setText("Book");
                 holder.nameTextView.setBackgroundResource(R.color.imageTextBackground);
 
+                setBookButtonClickListener(holder, appointment);
+
             } else {
                 holder.nameTextView.setVisibility(View.GONE);
                 holder.cancelOrBookButton.setEnabled(false);
+                holder.cancelOrBookButton.setText("Book");
+
             }
         }else {
             if(appointment.isAvailable()) {
@@ -63,13 +76,75 @@ public class AppointmentsAdapter extends RecyclerView.Adapter<AppointmentsAdapte
                 holder.nameTextView.setBackgroundResource(R.color.imageTextBackground);
             }else {
                 holder.nameTextView.setVisibility(View.VISIBLE);
-                holder.nameTextView.setText("Name"); //get from Server
+                holder.nameTextView.setText(appointment.getBookingUserName()); //get from Server
                 holder.cancelOrBookButton.setText("Cancel");
                 holder.cancelOrBookButton.setEnabled(true);
                 holder.nameTextView.setBackgroundResource(R.color.imageTextBackground);
+                setCancelButtonClickListener(holder, appointment);
             }
         }
     }
+
+    private void setCancelButtonClickListener(AppointmentViewHolder holder, Appointment appointment) {
+        holder.cancelOrBookButton.setOnClickListener(v -> {
+            new Thread(() -> {
+                String response = String.valueOf(NetworkUtils.performPostRequest(
+                        holder.cancelOrBookButton.getContext(),
+                        "bookings/cancel/" + appointment.getId(), new JSONObject(), true));
+                try {
+                    int status = new JSONObject(response).getInt("status");
+                    if (status == 200) {
+                        holder.cancelOrBookButton.post(() -> holder.cancelOrBookButton.setEnabled(false));
+                        holder.cancelOrBookButton.post(() -> holder.cancelOrBookButton.setText("Cancelled"));
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }).start();
+        });
+    }
+
+    private void setBookButtonClickListener(AppointmentViewHolder holder, Appointment appointment) {
+    holder.cancelOrBookButton.setOnClickListener(v -> {
+        JSONObject bookingData = new JSONObject();
+        JSONArray appointments = new JSONArray();
+        appointments.put(appointment.getId());
+        JSONObject rootObject = new JSONObject();
+
+        insertBookingData(bookingData, appointments, rootObject, appointment);
+
+        new Thread(() -> {
+            String response = String.valueOf(NetworkUtils.performPostRequest(
+                    holder.cancelOrBookButton.getContext(),
+                    "bookings/book",
+                    rootObject,
+                    true
+            ));
+            try {
+                int status = new JSONObject(response).getInt("status");
+                if (status == 200) {
+                    holder.cancelOrBookButton.post(() -> holder.cancelOrBookButton.setEnabled(false));
+                    holder.cancelOrBookButton.post(() -> holder.cancelOrBookButton.setText("Booked"));
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }).start();
+    });
+}
+
+private void insertBookingData(JSONObject bookingData, JSONArray appointments, JSONObject rootObject, Appointment appointment) {
+    try {
+        bookingData.put("appointmentsIds", appointments);
+        bookingData.put("bookingTime", LocalDateTime.now().toString());
+        bookingData.put("serviceProviderId", appointment.getServiceProviderId());
+        rootObject.put("data", bookingData);
+        System.out.println("booking request: " + rootObject.toString());
+    } catch (Exception e) {
+        e.printStackTrace();
+    }
+
+}
 
     @Override
     public int getItemCount() {

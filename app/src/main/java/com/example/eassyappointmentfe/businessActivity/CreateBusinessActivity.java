@@ -98,7 +98,7 @@ public class CreateBusinessActivity extends AppCompatActivity {
         new Thread(() -> {
             String response = null;
             try {
-                response = NetworkUtils.performGetRequest(this,"http://10.0.2.2:8080/api/categories/initial", true);
+                response = NetworkUtils.performGetRequest(this,"categories/initial", true);
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
@@ -173,7 +173,7 @@ public class CreateBusinessActivity extends AppCompatActivity {
             new Thread(() -> {
                 String response = String.valueOf(NetworkUtils.performPostRequest(
                         this,
-                        "http://10.0.2.2:8080/api/business/create",
+                        "business/create",
                         rootObject,
                         true
                 ));

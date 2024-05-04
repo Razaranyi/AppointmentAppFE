@@ -60,7 +60,7 @@ public class BusinessAdapter extends RecyclerView.Adapter<BusinessAdapter.Busine
             try {
                 NetworkUtils.performPostRequest(
                         context,
-                        "http://10.0.2.2:8080/api/favorites/add-or-remove/" + id,
+                        "favorites/add-or-remove/" + id,
                         new JSONObject(),
                         true);
             } catch (Exception e) {
