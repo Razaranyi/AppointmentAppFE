@@ -19,9 +19,12 @@ import java.util.Locale;
 
 public class AppointmentsAdapter extends RecyclerView.Adapter<AppointmentsAdapter.AppointmentViewHolder> {
     private List<Appointment> appointments;
+    private boolean isCustomer;
 
-    public AppointmentsAdapter(List<Appointment> appointments) {
+
+    public AppointmentsAdapter(List<Appointment> appointments,boolean isCustomer) {
         this.appointments = appointments;
+        this.isCustomer = isCustomer;
     }
 
     @NonNull

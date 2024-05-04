@@ -20,6 +20,8 @@ public class ServiceProviderAdapter extends RecyclerView.Adapter<ServiceProvider
     private final Context context;
     private OnServiceProviderClickListener onServiceProviderClickListener;
 
+    private Long selectedServiceProviderId;
+
     public ServiceProviderAdapter(@NonNull Context context, List<ServiceProvider> serviceProviders, OnServiceProviderClickListener listener) {
         this.context = context;
         this.serviceProviders = serviceProviders;
@@ -36,12 +38,17 @@ public class ServiceProviderAdapter extends RecyclerView.Adapter<ServiceProvider
     @Override
     public void onBindViewHolder(@NonNull ServiceProviderViewHolder holder, int position) {
         ServiceProvider serviceProvider = serviceProviders.get(position);
+        selectedServiceProviderId = serviceProvider.getId();
         holder.bind(serviceProvider);
     }
 
     @Override
     public int getItemCount() {
         return serviceProviders.size();
+    }
+
+    public long getSelectedServiceProviderId() {
+        return selectedServiceProviderId;
     }
 
     class ServiceProviderViewHolder extends RecyclerView.ViewHolder {

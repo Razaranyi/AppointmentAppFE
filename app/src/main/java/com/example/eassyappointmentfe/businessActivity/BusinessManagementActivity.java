@@ -1,4 +1,4 @@
-//TODO:1 Add Today's Appointments on service provider click - including cancel button then remove appointment button
+//TODO:1 Add functionality of cancel button then remove appointment button
 //TODO:2 Add a button to add business owner
 //TODO:3 fix Business name not showing
 //TODO:4 fix image outline not showing
@@ -6,15 +6,16 @@
 
 package com.example.eassyappointmentfe.businessActivity;
 
+import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.util.Base64;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -36,21 +37,24 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
-public class BusinessManagementActivity extends AppCompatActivity implements BranchAdapter.OnBranchClickListener,ServiceProviderAdapter.OnServiceProviderClickListener {
+public class BusinessManagementActivity extends AppCompatActivity implements BranchAdapter.OnBranchClickListener, ServiceProviderAdapter.OnServiceProviderClickListener {
 
     private String businessId;
     private String branchId;
+    private String serviceProviderId;
     private RecyclerView branchRecyclerView;
     private RecyclerView serviceProviderRecyclerView;
     private BranchAdapter branchAdapter;
     private ServiceProviderAdapter serviceProviderAdapter;
     private RecyclerView appointmentsRecyclerView;
-
 
 
     private TextView businessName;
@@ -60,6 +64,10 @@ public class BusinessManagementActivity extends AppCompatActivity implements Bra
     private Button appointmentButton;
     private List<Branch> branches = new ArrayList<>();
     private List<ServiceProvider> serviceProviders = new ArrayList<>();
+    private EditText tvDate;
+
+    private boolean isCustomer;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,8 +80,10 @@ public class BusinessManagementActivity extends AppCompatActivity implements Bra
         setUpBranchRecyclerView();
         fetchBranches();
 
-        branchAdapter = new BranchAdapter(this, branches,this);
+
+        branchAdapter = new BranchAdapter(this, branches, this);
         branchRecyclerView.setAdapter(branchAdapter);
+
 
         setUpServiceProvidersRecyclerView();
         fetchServiceProviders();
@@ -86,28 +96,33 @@ public class BusinessManagementActivity extends AppCompatActivity implements Bra
 
 
         setAddBranchText();
-        setUpAppointmentsButton(); //to be removed
+        setUpAppointmentsButton(); //to be removed?
         setAddServiceProviderText();
         setUpCustomerStatus();
+        setUpDatePicker();
 
     }
 
     private void initialize(Intent intent) {
         SharedPreferences preferences = getSharedPreferences("com.example.eassyappointmentfe.SHARED_PREFS", MODE_PRIVATE);
         businessId = intent.getStringExtra("businessId");
+        isCustomer = intent.getBooleanExtra("isCustomer", true);
         businessName = findViewById(R.id.businessName);
-        businessName.setText(preferences.getString("businessName","My Business"));
+        businessName.setText(preferences.getString("businessName", "My Business"));
         addBranchText = findViewById(R.id.addBranchText);
         addServiceProviderText = findViewById(R.id.addServiceProviderText);
         appointmentButton = findViewById(R.id.appointmentsButton);
         branchRecyclerView = findViewById(R.id.branchesRecyclerView);
         serviceProviderRecyclerView = findViewById(R.id.serviceProviderRecyclerView);
         customerStatus = findViewById(R.id.customerStatus);
+        tvDate = findViewById(R.id.tvDate);
+        String currentDate = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(new Date());
+        tvDate.setText(currentDate);
     }
 
     private void fetchBranches() {
-        if (businessId == null) {
-           businessId = NetworkUtils.getBusinessId(this);
+        if (businessId == null && !isCustomer) {
+            businessId = NetworkUtils.getBusinessId(this);
         }
         new Thread(() -> {
             String response = null;
@@ -136,7 +151,7 @@ public class BusinessManagementActivity extends AppCompatActivity implements Bra
         }
 
         new Thread(() -> {
-            if (branchId == null){
+            if (branchId == null) {
                 branchId = String.valueOf(branches.get(0).getId());
             }
             String response = null;
@@ -155,6 +170,10 @@ public class BusinessManagementActivity extends AppCompatActivity implements Bra
             }
             runOnUiThread(() -> {
                 updateServiceProviders(serviceProviders);
+                // Fetch appointments for the first service provider by default
+                long firstServiceProviderId = serviceProviders.get(0).getId();
+                String currentDate = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(new Date());
+                fetchAppointments(firstServiceProviderId, currentDate);
             });
         }).start();
     }
@@ -306,23 +325,24 @@ public class BusinessManagementActivity extends AppCompatActivity implements Bra
 
     @Override
     public void onServiceProviderClick(long serviceProviderId) {
-        fetchAppointments(serviceProviderId);
+        fetchAppointments(serviceProviderId, tvDate.getText().toString());
     }
 
-    private void fetchAppointments(long serviceProviderId) {
+    private void fetchAppointments(long serviceProviderId, String date) {
         new Thread(() -> {
-            try {
-                    String response = NetworkUtils.performGetRequest(
-                            this,
-                            "http://10.0.2.2:8080/api/business/"
-                                    + businessId + "/branch/" + branchId + "/service-provider/"
-                                    + serviceProviderId + "/appointment/get/date/" + LocalDate.of(2024,5,7),
-                            true
-                    );
-                    List<Appointment> appointments = Appointment.parseAppointments(response);
 
-                    System.out.println("Appointments: " + appointments.toString());
-                    runOnUiThread(() -> updateAppointmentsRecyclerView(appointments));
+            try {
+                String response = NetworkUtils.performGetRequest(
+                        this,
+                        "http://10.0.2.2:8080/api/business/"
+                                + businessId + "/branch/" + branchId + "/service-provider/"
+                                + serviceProviderId + "/appointment/get/date/" + date,
+                        true
+                );
+                List<Appointment> appointments = Appointment.parseAppointments(response);
+
+                System.out.println("Appointments: " + appointments.toString());
+                runOnUiThread(() -> updateAppointmentsRecyclerView(appointments));
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
@@ -331,10 +351,30 @@ public class BusinessManagementActivity extends AppCompatActivity implements Bra
 
     private void updateAppointmentsRecyclerView(List<Appointment> appointments) {
         if (appointmentsRecyclerView.getAdapter() == null) {
-            appointmentsRecyclerView.setAdapter(new AppointmentsAdapter(appointments));
+            appointmentsRecyclerView.setAdapter(new AppointmentsAdapter(appointments, isCustomer));
         } else {
             ((AppointmentsAdapter) appointmentsRecyclerView.getAdapter()).updateData(appointments);
         }
     }
 
+    private void setUpDatePicker() {
+        tvDate.setOnClickListener(v -> {
+            DatePickerDialog datePickerDialog = new DatePickerDialog(
+                    this,
+                    (view, year, month, dayOfMonth) -> {
+                        LocalDate selectedDate = LocalDate.of(year, month + 1, dayOfMonth);
+                        tvDate.setText(selectedDate.toString());
+
+                        // Fetch appointments for the selected date
+                        if (serviceProviderAdapter.getSelectedServiceProviderId() != 0) {
+                            fetchAppointments(serviceProviderAdapter.getSelectedServiceProviderId(), selectedDate.toString());
+                        }
+                    },
+                    Calendar.getInstance().get(Calendar.YEAR),
+                    Calendar.getInstance().get(Calendar.MONTH),
+                    Calendar.getInstance().get(Calendar.DAY_OF_MONTH)
+            );
+            datePickerDialog.show();
+        });
+    }
 }

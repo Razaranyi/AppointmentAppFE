@@ -30,7 +30,7 @@ public class TimeUtil {
         timePickerDialog.show();
     }
 
-    public void showDatePickerDialog(Calendar calendar, EditText dateInput, Context context) {
+    public static void showDatePickerDialog(Calendar calendar, EditText dateInput, Context context) {
         DatePickerDialog datePickerDialog = new DatePickerDialog(context,
                 (view, year, monthOfYear, dayOfMonth) -> {
                     calendar.set(Calendar.YEAR, year);

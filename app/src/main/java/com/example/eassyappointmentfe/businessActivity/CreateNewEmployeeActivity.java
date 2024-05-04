@@ -184,6 +184,7 @@ public class CreateNewEmployeeActivity extends AppCompatActivity {
                     Intent intent = new Intent(CreateNewEmployeeActivity.this, BusinessManagementActivity.class);
                     intent.putExtra("businessId", businessId);
                     intent.putExtra("branchId", branchId);
+                    intent.putExtra("isCustomer",false);
                     startActivity(intent);
                 }
             } catch (JSONException e) {

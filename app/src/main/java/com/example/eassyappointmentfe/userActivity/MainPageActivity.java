@@ -124,7 +124,7 @@ public class MainPageActivity extends AppCompatActivity {
         new Thread(() -> {
             try {
                 String response = NetworkUtils.performGetRequest(this,
-                        "http://10.0.2.2:8080/api/categories/get-seven",
+                        "http://10.0.2.2:8080/api/categories/get-all",
                         true);
                 List<Category> additionalCategories = parseCategoriesAndBusinesses(response);
                 runOnUiThread(() -> {
