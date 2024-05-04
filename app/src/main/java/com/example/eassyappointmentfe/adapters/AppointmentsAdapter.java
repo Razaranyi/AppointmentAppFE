@@ -76,7 +76,7 @@ public class AppointmentsAdapter extends RecyclerView.Adapter<AppointmentsAdapte
                 holder.nameTextView.setBackgroundResource(R.color.imageTextBackground);
             }else {
                 holder.nameTextView.setVisibility(View.VISIBLE);
-                holder.nameTextView.setText("Name"); //get from Server
+                holder.nameTextView.setText(appointment.getBookingUserName()); //get from Server
                 holder.cancelOrBookButton.setText("Cancel");
                 holder.cancelOrBookButton.setEnabled(true);
                 holder.nameTextView.setBackgroundResource(R.color.imageTextBackground);
