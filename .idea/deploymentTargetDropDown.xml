@@ -5,10 +5,10 @@
       <entry key="BusinessManagementActivity">
         <State />
       </entry>
-      <entry key="SignUpActivity">
+      <entry key="MainPageActivity">
         <State />
       </entry>
-      <entry key="mainPageActivity">
+      <entry key="SignUpActivity">
         <State />
       </entry>
     </value>

@@ -19,7 +19,7 @@ import com.example.eassyappointmentfe.DTO.Business;
 import com.example.eassyappointmentfe.DTO.Category;
 import com.example.eassyappointmentfe.R;
 import com.example.eassyappointmentfe.adapters.CategoriesAdapter;
-import com.example.eassyappointmentfe.businessActivity.BusinessManagementActivity;
+import com.example.eassyappointmentfe.commonActivity.CommonBusinessActivity;
 import com.example.eassyappointmentfe.businessActivity.CreateBusinessActivity;
 import com.example.eassyappointmentfe.util.ImageUtils;
 import com.example.eassyappointmentfe.util.NetworkUtils;
@@ -124,7 +124,7 @@ public class MainPageActivity extends AppCompatActivity {
         new Thread(() -> {
             try {
                 String response = NetworkUtils.performGetRequest(this,
-                        "http://10.0.2.2:8080/api/categories/get-seven",
+                        "http://10.0.2.2:8080/api/categories/get-all",
                         true);
                 List<Category> additionalCategories = parseCategoriesAndBusinesses(response);
                 runOnUiThread(() -> {
@@ -192,11 +192,23 @@ public class MainPageActivity extends AppCompatActivity {
                             true
                     );
                     JSONObject jsonObject = new JSONObject(response);
-                    int status = jsonObject.getInt("status");
-                    if (status == HttpURLConnection.HTTP_OK) {
-                        Intent intent = new Intent(MainPageActivity.this, BusinessManagementActivity.class);
+                    System.out.println("Response: " + jsonObject.toString());
+
+                    //TODO: handle this annoying bug
+                    int status = 0;
+                    boolean success = false;
+                    if (jsonObject.has("status")){
+                        status = jsonObject.getInt("status"); // success or status?!?!?!
+                    }
+                    else{
+                        success = jsonObject.getBoolean("success");
+                    }
+
+                    if (status == HttpURLConnection.HTTP_OK || success) {
+                        Intent intent = new Intent(MainPageActivity.this, CommonBusinessActivity.class);
                         intent.putExtra("businessId", NetworkUtils.processResponse(jsonObject, "id"));
-                        intent.putExtra("businessName", NetworkUtils.processResponse(jsonObject, "name"));
+                        intent.putExtra("businessName", "My Business");
+                        intent.putExtra("isCustomer", false);
                         startActivity(intent);
                     }else {
                         String errorMessage = jsonObject.getString("message");

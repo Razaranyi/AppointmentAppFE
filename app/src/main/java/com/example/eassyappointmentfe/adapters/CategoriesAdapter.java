@@ -112,7 +112,7 @@ public class CategoriesAdapter extends RecyclerView.Adapter<CategoriesAdapter.Ca
         }
 
         public void bind(Category category) {
-            BusinessAdapter adapter = new BusinessAdapter(context, category.getBusinesses());
+            BusinessAdapter adapter = new BusinessAdapter(context, category.getBusinesses(), null);
             rvHorizontalBusinesses.setAdapter(adapter);
             tvCategoryName.setText(category.getName());
         }

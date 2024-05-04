@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.eassyappointmentfe.DTO.Branch;
@@ -58,7 +59,7 @@ public class BranchAdapter extends RecyclerView.Adapter<BranchAdapter.BranchView
         public BranchViewHolder(View itemView) {
             super(itemView);
             imageView = itemView.findViewById(R.id.image_branch);
-            imageView.setBackgroundResource(R.drawable.image_outline);
+            imageView.setBackground(ContextCompat.getDrawable(context, R.color.imageTextBackground));
             branchUriTextView = itemView.findViewById(R.id.text_uri_title);
         }
 
@@ -68,6 +69,7 @@ public class BranchAdapter extends RecyclerView.Adapter<BranchAdapter.BranchView
 
             itemView.setOnClickListener(v -> {
                 if (onBranchClickListener != null) {
+
                     onBranchClickListener.onBranchClick(branch);
                 }
             });

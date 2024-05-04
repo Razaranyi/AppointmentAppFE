@@ -1,11 +1,9 @@
-//TODO:1 Add Today's Appointments on service provider click - including cancel button then remove appointment button
+//TODO:1 Add functionality of cancel button then remove appointment button
 //TODO:2 Add a button to add business owner
-//TODO:3 fix Business name not showing
-//TODO:4 fix image outline not showing
 
+package com.example.eassyappointmentfe.commonActivity;
 
-package com.example.eassyappointmentfe.businessActivity;
-
+import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
@@ -13,18 +11,24 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Base64;
+import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.eassyappointmentfe.DTO.Appointment;
 import com.example.eassyappointmentfe.DTO.Branch;
 import com.example.eassyappointmentfe.DTO.ServiceProvider;
 import com.example.eassyappointmentfe.R;
+import com.example.eassyappointmentfe.adapters.AppointmentsAdapter;
 import com.example.eassyappointmentfe.adapters.BranchAdapter;
 import com.example.eassyappointmentfe.adapters.ServiceProviderAdapter;
+import com.example.eassyappointmentfe.businessActivity.CreateBranchActivity;
+import com.example.eassyappointmentfe.businessActivity.CreateNewEmployeeActivity;
 import com.example.eassyappointmentfe.userActivity.MainPageActivity;
 import com.example.eassyappointmentfe.util.ImageUtils;
 import com.example.eassyappointmentfe.util.NetworkUtils;
@@ -33,17 +37,25 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
-public class BusinessManagementActivity extends AppCompatActivity implements BranchAdapter.OnBranchClickListener {
+public class CommonBusinessActivity extends AppCompatActivity implements BranchAdapter.OnBranchClickListener, ServiceProviderAdapter.OnServiceProviderClickListener {
 
     private String businessId;
     private String branchId;
+    private String serviceProviderId;
     private RecyclerView branchRecyclerView;
     private RecyclerView serviceProviderRecyclerView;
     private BranchAdapter branchAdapter;
     private ServiceProviderAdapter serviceProviderAdapter;
+    private RecyclerView appointmentsRecyclerView;
+
 
     private TextView businessName;
     private TextView customerStatus;
@@ -52,6 +64,10 @@ public class BusinessManagementActivity extends AppCompatActivity implements Bra
     private Button appointmentButton;
     private List<Branch> branches = new ArrayList<>();
     private List<ServiceProvider> serviceProviders = new ArrayList<>();
+    private EditText tvDate;
+
+    private boolean isCustomer;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,39 +80,52 @@ public class BusinessManagementActivity extends AppCompatActivity implements Bra
         setUpBranchRecyclerView();
         fetchBranches();
 
-        branchAdapter = new BranchAdapter(this, branches,this);
+
+        branchAdapter = new BranchAdapter(this, branches, this);
         branchRecyclerView.setAdapter(branchAdapter);
+
 
         setUpServiceProvidersRecyclerView();
         fetchServiceProviders();
 
-        serviceProviderAdapter = new ServiceProviderAdapter(this, serviceProviders);
+        serviceProviderAdapter = new ServiceProviderAdapter(this, serviceProviders, this);
         serviceProviderRecyclerView.setAdapter(serviceProviderAdapter);
+
+        appointmentsRecyclerView = findViewById(R.id.appointmentsRecyclerView);
+        appointmentsRecyclerView.setLayoutManager(new LinearLayoutManager(this));
 
 
         setAddBranchText();
-        setUpAppointmentsButton(); //to be removed
+        setUpAppointmentsButton(); //to be removed?
         setAddServiceProviderText();
         setUpCustomerStatus();
+        setUpDatePicker();
 
     }
 
     private void initialize(Intent intent) {
         SharedPreferences preferences = getSharedPreferences("com.example.eassyappointmentfe.SHARED_PREFS", MODE_PRIVATE);
         businessId = intent.getStringExtra("businessId");
+        isCustomer = intent.getBooleanExtra("isCustomer", true);
+
         businessName = findViewById(R.id.businessName);
-        businessName.setText(preferences.getString("businessName","My Business"));
+        businessName.setText(intent.getStringExtra("businessName"));
+
         addBranchText = findViewById(R.id.addBranchText);
         addServiceProviderText = findViewById(R.id.addServiceProviderText);
         appointmentButton = findViewById(R.id.appointmentsButton);
         branchRecyclerView = findViewById(R.id.branchesRecyclerView);
         serviceProviderRecyclerView = findViewById(R.id.serviceProviderRecyclerView);
         customerStatus = findViewById(R.id.customerStatus);
+
+        tvDate = findViewById(R.id.tvDate);
+        String currentDate = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(new Date());
+        tvDate.setText(currentDate);
     }
 
     private void fetchBranches() {
-        if (businessId == null) {
-           businessId = NetworkUtils.getBusinessId(this);
+        if (businessId == null && !isCustomer) {
+            businessId = NetworkUtils.getBusinessId(this);
         }
         new Thread(() -> {
             String response = null;
@@ -118,14 +147,14 @@ public class BusinessManagementActivity extends AppCompatActivity implements Bra
         }).start();
     }
 
-    private void fetchServiceProviders() {
+    private void fetchServiceProviders() { //called only when branch is clicked or on start
         System.out.println("Fetching service providers. Branches: " + branches.size() + ",Business ID: " + businessId + " Branch ID: " + branchId);
         if (branches.isEmpty()) {
             return;
         }
 
         new Thread(() -> {
-            if (branchId == null){
+            if (branchId == null) {
                 branchId = String.valueOf(branches.get(0).getId());
             }
             String response = null;
@@ -144,6 +173,10 @@ public class BusinessManagementActivity extends AppCompatActivity implements Bra
             }
             runOnUiThread(() -> {
                 updateServiceProviders(serviceProviders);
+                // Fetch appointments for the first service provider by default
+                long firstServiceProviderId = serviceProviders.get(0).getId();
+                String currentDate = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(new Date());
+                fetchAppointments(firstServiceProviderId, currentDate);
             });
         }).start();
     }
@@ -233,7 +266,7 @@ public class BusinessManagementActivity extends AppCompatActivity implements Bra
     }
 
     private void updateServiceProviders(List<ServiceProvider> newServiceProviders) {
-        serviceProviderAdapter = new ServiceProviderAdapter(this, newServiceProviders);
+        serviceProviderAdapter = new ServiceProviderAdapter(this, newServiceProviders, this);
         serviceProviderRecyclerView.setAdapter(serviceProviderAdapter);
     }
 
@@ -254,16 +287,24 @@ public class BusinessManagementActivity extends AppCompatActivity implements Bra
     }
 
     private void setAddBranchText() {
+        if (isCustomer) {
+            addBranchText.setVisibility(Button.GONE);
+            return;
+        }
         addBranchText.setOnClickListener(v -> {
-            Intent intent = new Intent(BusinessManagementActivity.this, CreateBranchActivity.class);
+            Intent intent = new Intent(CommonBusinessActivity.this, CreateBranchActivity.class);
             intent.putExtra("businessId", businessId);
             startActivity(intent);
         });
     }
 
     private void setAddServiceProviderText() {
+        if (isCustomer) {
+            addServiceProviderText.setVisibility(Button.GONE);
+            return;
+        }
         addServiceProviderText.setOnClickListener(v -> {
-            Intent intent = new Intent(BusinessManagementActivity.this, CreateNewEmployeeActivity.class);
+            Intent intent = new Intent(CommonBusinessActivity.this, CreateNewEmployeeActivity.class);
             intent.putExtra("branchId", branchId);
             intent.putExtra("businessId", businessId);
             startActivity(intent);
@@ -279,8 +320,12 @@ public class BusinessManagementActivity extends AppCompatActivity implements Bra
     }
 
     private void setUpCustomerStatus() {
+
+        if (isCustomer) {
+            customerStatus.setVisibility(TextView.GONE);
+        }
         customerStatus.setOnClickListener(v -> {
-            Intent intent = new Intent(BusinessManagementActivity.this, MainPageActivity.class);
+            Intent intent = new Intent(CommonBusinessActivity.this, MainPageActivity.class);
             startActivity(intent);
         });
     }
@@ -290,5 +335,67 @@ public class BusinessManagementActivity extends AppCompatActivity implements Bra
     public void onBranchClick(Branch branch) {
         branchId = String.valueOf(branch.getId());
         fetchServiceProviders();
+    }
+
+
+    @Override
+    public void onServiceProviderClick(long serviceProviderId) {
+        fetchAppointments(serviceProviderId, tvDate.getText().toString());
+    }
+
+    private void fetchAppointments(long serviceProviderId, String date) { // called service provider clicked or when asked to get default or when date is changed
+        new Thread(() -> {
+
+            try {
+                String response = NetworkUtils.performGetRequest(
+                        this,
+                        "http://10.0.2.2:8080/api/business/"
+                                + businessId + "/branch/" + branchId + "/service-provider/"
+                                + serviceProviderId + "/appointment/get/date/" + date,
+                        true
+                );
+                List<Appointment> appointments = Appointment.parseAppointments(response);
+
+                System.out.println("Appointments: " + appointments.toString());
+                runOnUiThread(() -> updateAppointmentsRecyclerView(appointments));
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }).start();
+    }
+
+    private void updateAppointmentsRecyclerView(List<Appointment> appointments) {
+        TextView noAppointmentsText = findViewById(R.id.noAppointmentsText);
+        if (appointments.isEmpty()) {
+            noAppointmentsText.setVisibility(View.VISIBLE);
+        } else {
+            noAppointmentsText.setVisibility(View.GONE);
+        }
+        if (appointmentsRecyclerView.getAdapter() == null) {
+            appointmentsRecyclerView.setAdapter(new AppointmentsAdapter(appointments, isCustomer));
+        } else {
+            ((AppointmentsAdapter) appointmentsRecyclerView.getAdapter()).updateData(appointments);
+        }
+    }
+
+    private void setUpDatePicker() {
+        tvDate.setOnClickListener(v -> {
+            DatePickerDialog datePickerDialog = new DatePickerDialog(
+                    this,
+                    (view, year, month, dayOfMonth) -> {
+                        LocalDate selectedDate = LocalDate.of(year, month + 1, dayOfMonth);
+                        tvDate.setText(selectedDate.toString());
+
+                        // Fetch appointments for the selected date
+                        if (serviceProviderAdapter.getSelectedServiceProviderId() != 0) {
+                            fetchAppointments(serviceProviderAdapter.getSelectedServiceProviderId(), selectedDate.toString());
+                        }
+                    },
+                    Calendar.getInstance().get(Calendar.YEAR),
+                    Calendar.getInstance().get(Calendar.MONTH),
+                    Calendar.getInstance().get(Calendar.DAY_OF_MONTH)
+            );
+            datePickerDialog.show();
+        });
     }
 }

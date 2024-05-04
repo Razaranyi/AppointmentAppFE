@@ -16,13 +16,16 @@ import com.example.eassyappointmentfe.R;
 import java.util.List;
 
 public class ServiceProviderAdapter extends RecyclerView.Adapter<ServiceProviderAdapter.ServiceProviderViewHolder> {
-
     private final List<ServiceProvider> serviceProviders;
     private final Context context;
+    private OnServiceProviderClickListener onServiceProviderClickListener;
 
-    public ServiceProviderAdapter(@NonNull Context context, List<ServiceProvider> serviceProviders) {
+    private Long selectedServiceProviderId;
+
+    public ServiceProviderAdapter(@NonNull Context context, List<ServiceProvider> serviceProviders, OnServiceProviderClickListener listener) {
         this.context = context;
         this.serviceProviders = serviceProviders;
+        this.onServiceProviderClickListener = listener;
     }
 
     @NonNull
@@ -35,12 +38,17 @@ public class ServiceProviderAdapter extends RecyclerView.Adapter<ServiceProvider
     @Override
     public void onBindViewHolder(@NonNull ServiceProviderViewHolder holder, int position) {
         ServiceProvider serviceProvider = serviceProviders.get(position);
+        selectedServiceProviderId = serviceProvider.getId();
         holder.bind(serviceProvider);
     }
 
     @Override
     public int getItemCount() {
         return serviceProviders.size();
+    }
+
+    public long getSelectedServiceProviderId() {
+        return selectedServiceProviderId;
     }
 
     class ServiceProviderViewHolder extends RecyclerView.ViewHolder {
@@ -56,8 +64,15 @@ public class ServiceProviderAdapter extends RecyclerView.Adapter<ServiceProvider
         public void bind(ServiceProvider serviceProvider) {
             imageView.setImageURI(serviceProvider.getServiceProviderImage());
             serviceProviderUriTextView.setText(serviceProvider.getName());
-            // Set click listener if needed
-            itemView.setOnClickListener(v -> {/* Handle click */});
+            itemView.setOnClickListener(v -> {
+                if (onServiceProviderClickListener != null) {
+                    onServiceProviderClickListener.onServiceProviderClick(serviceProvider.getId());
+                }
+            });
         }
+    }
+
+    public interface OnServiceProviderClickListener {
+        void onServiceProviderClick(long serviceProviderId);
     }
 }
