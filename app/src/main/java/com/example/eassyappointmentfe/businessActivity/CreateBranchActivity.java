@@ -1,6 +1,5 @@
 package com.example.eassyappointmentfe.businessActivity;
 
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
@@ -17,6 +16,7 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.eassyappointmentfe.R;
+import com.example.eassyappointmentfe.commonActivity.CommonBusinessActivity;
 import com.example.eassyappointmentfe.util.ImageUtils;
 import com.example.eassyappointmentfe.util.NetworkUtils;
 import com.example.eassyappointmentfe.util.TimeUtil;
@@ -126,7 +126,7 @@ public class CreateBranchActivity extends AppCompatActivity {
                             intent.putExtra("branchId", branchId);
                             intent.putExtra("businessId", businessId);
 
-                            Intent mangmentIntent = new Intent(CreateBranchActivity.this, BusinessManagementActivity.class);
+                            Intent mangmentIntent = new Intent(CreateBranchActivity.this, CommonBusinessActivity.class);
                             startActivity(intent);
                         }
                     });

@@ -49,7 +49,7 @@
             android:exported="true" >
         </activity> <!-- businessManagementActivity -->
         <activity
-            android:name=".businessActivity.BusinessManagementActivity"
+            android:name=".commonActivity.CommonBusinessActivity"
             android:exported="true" >
         </activity>
 

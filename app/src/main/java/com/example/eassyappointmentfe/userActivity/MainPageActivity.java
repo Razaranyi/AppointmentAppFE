@@ -19,7 +19,7 @@ import com.example.eassyappointmentfe.DTO.Business;
 import com.example.eassyappointmentfe.DTO.Category;
 import com.example.eassyappointmentfe.R;
 import com.example.eassyappointmentfe.adapters.CategoriesAdapter;
-import com.example.eassyappointmentfe.businessActivity.BusinessManagementActivity;
+import com.example.eassyappointmentfe.commonActivity.CommonBusinessActivity;
 import com.example.eassyappointmentfe.businessActivity.CreateBusinessActivity;
 import com.example.eassyappointmentfe.util.ImageUtils;
 import com.example.eassyappointmentfe.util.NetworkUtils;
@@ -193,9 +193,19 @@ public class MainPageActivity extends AppCompatActivity {
                     );
                     JSONObject jsonObject = new JSONObject(response);
                     System.out.println("Response: " + jsonObject.toString());
-                    int status = jsonObject.getInt("status"); // success or status?!?!?!
-                    if (status == HttpURLConnection.HTTP_OK) {
-                        Intent intent = new Intent(MainPageActivity.this, BusinessManagementActivity.class);
+
+                    //TODO: handle this annoying bug
+                    int status = 0;
+                    boolean success = false;
+                    if (jsonObject.has("status")){
+                        status = jsonObject.getInt("status"); // success or status?!?!?!
+                    }
+                    else{
+                        success = jsonObject.getBoolean("success");
+                    }
+
+                    if (status == HttpURLConnection.HTTP_OK || success) {
+                        Intent intent = new Intent(MainPageActivity.this, CommonBusinessActivity.class);
                         intent.putExtra("businessId", NetworkUtils.processResponse(jsonObject, "id"));
                         intent.putExtra("businessName", NetworkUtils.processResponse(jsonObject, "name"));
                         startActivity(intent);

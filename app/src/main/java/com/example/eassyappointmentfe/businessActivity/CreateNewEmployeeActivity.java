@@ -19,6 +19,7 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.eassyappointmentfe.R;
+import com.example.eassyappointmentfe.commonActivity.CommonBusinessActivity;
 import com.example.eassyappointmentfe.fragments.BreakTimeBottomSheetDialogFragment;
 import com.example.eassyappointmentfe.fragments.DayOfWeekSelectorDialogFragment;
 import com.example.eassyappointmentfe.util.ImageUtils;
@@ -181,7 +182,7 @@ public class CreateNewEmployeeActivity extends AppCompatActivity {
             runOnUiThread(() -> Toast.makeText(CreateNewEmployeeActivity.this, processResponse(response, "message"), Toast.LENGTH_LONG).show());
             try {
                 if (response.getInt("status") == 200) {
-                    Intent intent = new Intent(CreateNewEmployeeActivity.this, BusinessManagementActivity.class);
+                    Intent intent = new Intent(CreateNewEmployeeActivity.this, CommonBusinessActivity.class);
                     intent.putExtra("businessId", businessId);
                     intent.putExtra("branchId", branchId);
                     intent.putExtra("isCustomer",false);

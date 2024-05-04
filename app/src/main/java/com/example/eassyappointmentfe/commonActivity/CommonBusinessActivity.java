@@ -4,7 +4,7 @@
 //TODO:4 fix image outline not showing
 
 
-package com.example.eassyappointmentfe.businessActivity;
+package com.example.eassyappointmentfe.commonActivity;
 
 import android.app.DatePickerDialog;
 import android.content.Intent;
@@ -29,6 +29,8 @@ import com.example.eassyappointmentfe.R;
 import com.example.eassyappointmentfe.adapters.AppointmentsAdapter;
 import com.example.eassyappointmentfe.adapters.BranchAdapter;
 import com.example.eassyappointmentfe.adapters.ServiceProviderAdapter;
+import com.example.eassyappointmentfe.businessActivity.CreateBranchActivity;
+import com.example.eassyappointmentfe.businessActivity.CreateNewEmployeeActivity;
 import com.example.eassyappointmentfe.userActivity.MainPageActivity;
 import com.example.eassyappointmentfe.util.ImageUtils;
 import com.example.eassyappointmentfe.util.NetworkUtils;
@@ -45,7 +47,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
-public class BusinessManagementActivity extends AppCompatActivity implements BranchAdapter.OnBranchClickListener, ServiceProviderAdapter.OnServiceProviderClickListener {
+public class CommonBusinessActivity extends AppCompatActivity implements BranchAdapter.OnBranchClickListener, ServiceProviderAdapter.OnServiceProviderClickListener {
 
     private String businessId;
     private String branchId;
@@ -115,6 +117,7 @@ public class BusinessManagementActivity extends AppCompatActivity implements Bra
         branchRecyclerView = findViewById(R.id.branchesRecyclerView);
         serviceProviderRecyclerView = findViewById(R.id.serviceProviderRecyclerView);
         customerStatus = findViewById(R.id.customerStatus);
+
         tvDate = findViewById(R.id.tvDate);
         String currentDate = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(new Date());
         tvDate.setText(currentDate);
@@ -284,16 +287,24 @@ public class BusinessManagementActivity extends AppCompatActivity implements Bra
     }
 
     private void setAddBranchText() {
+        if (isCustomer) {
+            addBranchText.setVisibility(Button.GONE);
+            return;
+        }
         addBranchText.setOnClickListener(v -> {
-            Intent intent = new Intent(BusinessManagementActivity.this, CreateBranchActivity.class);
+            Intent intent = new Intent(CommonBusinessActivity.this, CreateBranchActivity.class);
             intent.putExtra("businessId", businessId);
             startActivity(intent);
         });
     }
 
     private void setAddServiceProviderText() {
+        if (isCustomer) {
+            addServiceProviderText.setVisibility(Button.GONE);
+            return;
+        }
         addServiceProviderText.setOnClickListener(v -> {
-            Intent intent = new Intent(BusinessManagementActivity.this, CreateNewEmployeeActivity.class);
+            Intent intent = new Intent(CommonBusinessActivity.this, CreateNewEmployeeActivity.class);
             intent.putExtra("branchId", branchId);
             intent.putExtra("businessId", businessId);
             startActivity(intent);
@@ -309,8 +320,12 @@ public class BusinessManagementActivity extends AppCompatActivity implements Bra
     }
 
     private void setUpCustomerStatus() {
+
+        if (isCustomer) {
+            customerStatus.setVisibility(TextView.GONE);
+        }
         customerStatus.setOnClickListener(v -> {
-            Intent intent = new Intent(BusinessManagementActivity.this, MainPageActivity.class);
+            Intent intent = new Intent(CommonBusinessActivity.this, MainPageActivity.class);
             startActivity(intent);
         });
     }

@@ -20,6 +20,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.eassyappointmentfe.DTO.Category;
 import com.example.eassyappointmentfe.R;
+import com.example.eassyappointmentfe.commonActivity.CommonBusinessActivity;
 import com.example.eassyappointmentfe.util.ImageUtils;
 import com.example.eassyappointmentfe.util.NetworkUtils;
 
@@ -27,7 +28,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.util.ArrayList;
@@ -98,7 +98,7 @@ public class CreateBusinessActivity extends AppCompatActivity {
         new Thread(() -> {
             String response = null;
             try {
-                response = NetworkUtils.performGetRequest(this,"http://10.0.2.2:8080/api/categories/all", true);
+                response = NetworkUtils.performGetRequest(this,"http://10.0.2.2:8080/api/categories/initial", true);
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
@@ -191,7 +191,7 @@ public class CreateBusinessActivity extends AppCompatActivity {
 
                             System.out.println("Business Activity businessId: " + businessId);
                             intent.putExtra("businessId", businessId);
-                            Intent mangmentIntent = new Intent(CreateBusinessActivity.this, BusinessManagementActivity.class);
+                            Intent mangmentIntent = new Intent(CreateBusinessActivity.this, CommonBusinessActivity.class);
                             mangmentIntent.putExtra("businessId", businessId);
                             SharedPreferences prefs = getSharedPreferences(SHARED_PREFS_FILE, MODE_PRIVATE);
                             SharedPreferences.Editor editor = prefs.edit();
