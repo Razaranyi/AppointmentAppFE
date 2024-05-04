@@ -207,7 +207,8 @@ public class MainPageActivity extends AppCompatActivity {
                     if (status == HttpURLConnection.HTTP_OK || success) {
                         Intent intent = new Intent(MainPageActivity.this, CommonBusinessActivity.class);
                         intent.putExtra("businessId", NetworkUtils.processResponse(jsonObject, "id"));
-                        intent.putExtra("businessName", NetworkUtils.processResponse(jsonObject, "name"));
+                        intent.putExtra("businessName", "My Business");
+                        intent.putExtra("isCustomer", false);
                         startActivity(intent);
                     }else {
                         String errorMessage = jsonObject.getString("message");

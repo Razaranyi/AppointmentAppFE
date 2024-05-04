@@ -1,8 +1,5 @@
 //TODO:1 Add functionality of cancel button then remove appointment button
 //TODO:2 Add a button to add business owner
-//TODO:3 fix Business name not showing
-//TODO:4 fix image outline not showing
-
 
 package com.example.eassyappointmentfe.commonActivity;
 
@@ -14,6 +11,7 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Base64;
+import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -109,8 +107,10 @@ public class CommonBusinessActivity extends AppCompatActivity implements BranchA
         SharedPreferences preferences = getSharedPreferences("com.example.eassyappointmentfe.SHARED_PREFS", MODE_PRIVATE);
         businessId = intent.getStringExtra("businessId");
         isCustomer = intent.getBooleanExtra("isCustomer", true);
+
         businessName = findViewById(R.id.businessName);
-        businessName.setText(preferences.getString("businessName", "My Business"));
+        businessName.setText(intent.getStringExtra("businessName"));
+
         addBranchText = findViewById(R.id.addBranchText);
         addServiceProviderText = findViewById(R.id.addServiceProviderText);
         appointmentButton = findViewById(R.id.appointmentsButton);
@@ -147,7 +147,7 @@ public class CommonBusinessActivity extends AppCompatActivity implements BranchA
         }).start();
     }
 
-    private void fetchServiceProviders() {
+    private void fetchServiceProviders() { //called only when branch is clicked or on start
         System.out.println("Fetching service providers. Branches: " + branches.size() + ",Business ID: " + businessId + " Branch ID: " + branchId);
         if (branches.isEmpty()) {
             return;
@@ -343,7 +343,7 @@ public class CommonBusinessActivity extends AppCompatActivity implements BranchA
         fetchAppointments(serviceProviderId, tvDate.getText().toString());
     }
 
-    private void fetchAppointments(long serviceProviderId, String date) {
+    private void fetchAppointments(long serviceProviderId, String date) { // called service provider clicked or when asked to get default or when date is changed
         new Thread(() -> {
 
             try {
@@ -365,6 +365,12 @@ public class CommonBusinessActivity extends AppCompatActivity implements BranchA
     }
 
     private void updateAppointmentsRecyclerView(List<Appointment> appointments) {
+        TextView noAppointmentsText = findViewById(R.id.noAppointmentsText);
+        if (appointments.isEmpty()) {
+            noAppointmentsText.setVisibility(View.VISIBLE);
+        } else {
+            noAppointmentsText.setVisibility(View.GONE);
+        }
         if (appointmentsRecyclerView.getAdapter() == null) {
             appointmentsRecyclerView.setAdapter(new AppointmentsAdapter(appointments, isCustomer));
         } else {

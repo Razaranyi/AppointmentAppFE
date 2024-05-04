@@ -11,6 +11,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Booking Name"
+        android:textStyle="bold"
         android:textSize="16sp"
         android:textColor="@android:color/black"
         android:layout_alignParentStart="true"/>

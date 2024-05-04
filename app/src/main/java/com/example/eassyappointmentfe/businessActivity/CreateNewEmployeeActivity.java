@@ -186,6 +186,8 @@ public class CreateNewEmployeeActivity extends AppCompatActivity {
                     intent.putExtra("businessId", businessId);
                     intent.putExtra("branchId", branchId);
                     intent.putExtra("isCustomer",false);
+                    intent.putExtra("businessName", "My Business");
+
                     startActivity(intent);
                 }
             } catch (JSONException e) {
