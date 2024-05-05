@@ -70,6 +70,7 @@ public class AppointmentActivity extends AppCompatActivity {
                     "bookings/get-my-bookings?startDate=" + startDate + "&endDate=" + endDate,
                     true
             );
+            System.out.println("my booking response: " + response);
             JSONObject jsonResponse = new JSONObject(response);
             List<Appointment> appointments = Appointment.parseAppointments(jsonResponse.getString("data"));
             runOnUiThread(() -> updateAppointmentsRecyclerView(appointments));

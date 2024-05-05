@@ -355,6 +355,7 @@ public class CommonBusinessActivity extends AppCompatActivity implements BranchA
                                 + serviceProviderId + "/appointment/get/date/" + date,
                         true
                 );
+                System.out.println("Appointments response: " + response);
                 List<Appointment> appointments = Appointment.parseAppointments(response);
 
                 System.out.println("Appointments: " + appointments.toString());
