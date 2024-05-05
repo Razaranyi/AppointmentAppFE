@@ -253,7 +253,7 @@ public class NetworkUtils {
         // Check if the response is nested inside a "response" key, typical for some API responses
         JSONObject innerResponse = response.optJSONObject("response");
         if (innerResponse != null) {
-            response = innerResponse;  // Use the inner response for further processing
+            response = innerResponse;  // Use  inner response for further processing
         }
 
         // For extracting message regardless of its location
@@ -281,7 +281,7 @@ public class NetworkUtils {
     public static boolean[] convertJsonArrayToBooleanArray(JSONArray jsonArray) throws JSONException {
         boolean[] workingDays = new boolean[jsonArray.length()];
         for (int i = 0; i < jsonArray.length(); i++) {
-            workingDays[i] = jsonArray.getBoolean(i); // Assumes the JSON array contains boolean values
+            workingDays[i] = jsonArray.getBoolean(i);
         }
         return workingDays;
     }
@@ -289,7 +289,7 @@ public class NetworkUtils {
     public static Set<Long> convertJsonArrayToSet(JSONArray jsonArray) throws JSONException {
         Set<Long> resultSet = new HashSet<>();
         for (int i = 0; i < jsonArray.length(); i++) {
-            resultSet.add(jsonArray.getLong(i)); // Assumes the JSON array contains long values
+            resultSet.add(jsonArray.getLong(i));
         }
         return resultSet;
     }

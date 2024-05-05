@@ -32,6 +32,7 @@ import com.example.eassyappointmentfe.businessActivity.CreateNewEmployeeActivity
 import com.example.eassyappointmentfe.userActivity.MainPageActivity;
 import com.example.eassyappointmentfe.util.ImageUtils;
 import com.example.eassyappointmentfe.util.NetworkUtils;
+import com.example.eassyappointmentfe.util.TimeUtil;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -379,23 +380,13 @@ public class CommonBusinessActivity extends AppCompatActivity implements BranchA
     }
 
     private void setUpDatePicker() {
-        tvDate.setOnClickListener(v -> {
-            DatePickerDialog datePickerDialog = new DatePickerDialog(
-                    this,
-                    (view, year, month, dayOfMonth) -> {
-                        LocalDate selectedDate = LocalDate.of(year, month + 1, dayOfMonth);
-                        tvDate.setText(selectedDate.toString());
+    tvDate.setOnClickListener(v -> {
+        TimeUtil.showDatePickerDialog(this, tvDate);
 
-                        // Fetch appointments for the selected date
-                        if (serviceProviderAdapter.getSelectedServiceProviderId() != 0) {
-                            fetchAppointments(serviceProviderAdapter.getSelectedServiceProviderId(), selectedDate.toString());
-                        }
-                    },
-                    Calendar.getInstance().get(Calendar.YEAR),
-                    Calendar.getInstance().get(Calendar.MONTH),
-                    Calendar.getInstance().get(Calendar.DAY_OF_MONTH)
-            );
-            datePickerDialog.show();
-        });
-    }
+        // Fetch appointments for the selected date
+        if (serviceProviderAdapter.getSelectedServiceProviderId() != 0) {
+            fetchAppointments(serviceProviderAdapter.getSelectedServiceProviderId(),tvDate.getText().toString());
+        }
+    });
+}
 }

@@ -30,16 +30,21 @@ public class TimeUtil {
         timePickerDialog.show();
     }
 
-    public static void showDatePickerDialog(Calendar calendar, EditText dateInput, Context context) {
-        DatePickerDialog datePickerDialog = new DatePickerDialog(context,
-                (view, year, monthOfYear, dayOfMonth) -> {
-                    calendar.set(Calendar.YEAR, year);
-                    calendar.set(Calendar.MONTH, monthOfYear);
-                    calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-                }, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
+    public static void showDatePickerDialog(Context context, final EditText dateInput) {
+    final Calendar c = Calendar.getInstance();
+    int year = c.get(Calendar.YEAR);
+    int month = c.get(Calendar.MONTH);
+    int day = c.get(Calendar.DAY_OF_MONTH);
 
-        datePickerDialog.show();
-    }
+    DatePickerDialog datePickerDialog = new DatePickerDialog(context,
+            (view, year1, monthOfYear, dayOfMonth) -> {
+                String formattedDate = String.format(Locale.getDefault(), "%04d-%02d-%02d", year1, monthOfYear + 1, dayOfMonth);
+                dateInput.setText(formattedDate);
+            }, year, month, day);
+    datePickerDialog.getDatePicker().setMinDate(System.currentTimeMillis() - 1000);
+    datePickerDialog.show();
+}
+
 
     public static LocalTime toLocalTime(String timeString) {
         if (timeString == null || timeString.isEmpty()) {

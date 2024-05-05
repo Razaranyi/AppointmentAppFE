@@ -59,6 +59,12 @@
             android:name=".userActivity.MainPageActivity"
             android:exported="true" >
         </activity> <!-- AppointmentActivity -->
+
+        <activity
+            android:name=".userActivity.AppointmentActivity"
+            android:exported="true" >
+        </activity> <!-- AppointmentDetailsActivity -->
+
     </application>
 
 </manifest>
