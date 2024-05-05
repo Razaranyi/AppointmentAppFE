@@ -9,6 +9,7 @@ import android.widget.EditText;
 import org.json.JSONArray;
 import org.json.JSONException;
 
+import java.text.SimpleDateFormat;
 import java.time.LocalTime;
 import java.util.Calendar;
 import java.util.HashSet;
@@ -30,16 +31,22 @@ public class TimeUtil {
         timePickerDialog.show();
     }
 
-    public static void showDatePickerDialog(Calendar calendar, EditText dateInput, Context context) {
-        DatePickerDialog datePickerDialog = new DatePickerDialog(context,
-                (view, year, monthOfYear, dayOfMonth) -> {
-                    calendar.set(Calendar.YEAR, year);
-                    calendar.set(Calendar.MONTH, monthOfYear);
-                    calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-                }, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
+    public static void showDatePickerDialog(Context context, EditText editText, Runnable afterDateSet) {
+        Calendar calendar = Calendar.getInstance();
+        int year = calendar.get(Calendar.YEAR);
+        int month = calendar.get(Calendar.MONTH);
+        int day = calendar.get(Calendar.DAY_OF_MONTH);
 
+        DatePickerDialog datePickerDialog = new DatePickerDialog(context, (view, year1, monthOfYear, dayOfMonth) -> {
+            calendar.set(year1, monthOfYear, dayOfMonth);
+            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
+            editText.setText(format.format(calendar.getTime()));
+            afterDateSet.run();
+        }, year, month, day);
+        datePickerDialog.getDatePicker().setMinDate(System.currentTimeMillis() - 1000);
         datePickerDialog.show();
     }
+
 
     public static LocalTime toLocalTime(String timeString) {
         if (timeString == null || timeString.isEmpty()) {

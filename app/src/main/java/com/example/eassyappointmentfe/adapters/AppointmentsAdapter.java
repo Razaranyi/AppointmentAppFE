@@ -1,5 +1,6 @@
 package com.example.eassyappointmentfe.adapters;
 
+import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.eassyappointmentfe.DTO.Appointment;
 import com.example.eassyappointmentfe.R;
+import com.example.eassyappointmentfe.userActivity.AppointmentActivity;
 import com.example.eassyappointmentfe.util.NetworkUtils;
 
 import org.json.JSONArray;
@@ -26,11 +28,13 @@ import java.util.Locale;
 public class AppointmentsAdapter extends RecyclerView.Adapter<AppointmentsAdapter.AppointmentViewHolder> {
     private List<Appointment> appointments;
     private boolean isCustomer;
+    private Context context;
 
 
-    public AppointmentsAdapter(List<Appointment> appointments,boolean isCustomer) {
+    public AppointmentsAdapter(Context context, List<Appointment> appointments, boolean isCustomer) {
         this.appointments = appointments;
         this.isCustomer = isCustomer;
+        this.context = context;
     }
 
     @NonNull
@@ -47,40 +51,57 @@ public class AppointmentsAdapter extends RecyclerView.Adapter<AppointmentsAdapte
             appointment = appointments.get(0);
         }
         SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm", Locale.getDefault());
+        if (context instanceof AppointmentActivity) {
+            timeFormat = new SimpleDateFormat("MMM dd, HH:mm", Locale.getDefault());
+        }
         holder.startTimeTextView.setText(timeFormat.format(appointment.getStartTime())+ " - ");
         holder.endTimeTextView.setText(timeFormat.format(appointment.getEndTime()));
         holder.startTimeTextView.setBackgroundColor(ContextCompat.getColor(holder.startTimeTextView.getContext(), R.color.imageTextBackground));
         holder.endTimeTextView.setBackgroundColor(ContextCompat.getColor(holder.endTimeTextView.getContext(), R.color.imageTextBackground));
 
-        if (isCustomer) {
-            if (appointment.isAvailable()) {
-                holder.nameTextView.setVisibility(View.GONE);
+        if (isCustomer) { //handle if user is customer
+            //costumer in My Appointments page can cancel his own appointments
+            if (context instanceof AppointmentActivity) {
+                holder.nameTextView.setVisibility(View.VISIBLE);
+                holder.nameTextView.setText(appointment.getBookedBusinessName());
                 holder.cancelOrBookButton.setVisibility(View.VISIBLE);
-                holder.cancelOrBookButton.setText("Book");
-                holder.nameTextView.setBackgroundResource(R.color.imageTextBackground);
-
-                setBookButtonClickListener(holder, appointment);
-
-            } else {
-                holder.nameTextView.setVisibility(View.GONE);
-                holder.cancelOrBookButton.setEnabled(false);
-                holder.cancelOrBookButton.setText("Book");
-
-            }
-        }else {
-            if(appointment.isAvailable()) {
                 holder.cancelOrBookButton.setText("Cancel");
-                holder.cancelOrBookButton.setEnabled(false);
-                holder.nameTextView.setVisibility(View.VISIBLE);
-                holder.nameTextView.setText("Free");
-                holder.nameTextView.setBackgroundResource(R.color.imageTextBackground);
-            }else {
-                holder.nameTextView.setVisibility(View.VISIBLE);
-                holder.nameTextView.setText(appointment.getBookingUserName()); //get from Server
-                holder.cancelOrBookButton.setText("Cancel");
-                holder.cancelOrBookButton.setEnabled(true);
                 holder.nameTextView.setBackgroundResource(R.color.imageTextBackground);
                 setCancelButtonClickListener(holder, appointment);
+            }
+            else { // customer in Business page can only book available appointments
+
+                if (appointment.isAvailable()) {
+                    holder.nameTextView.setVisibility(View.GONE);
+                    holder.cancelOrBookButton.setVisibility(View.VISIBLE);
+                    holder.cancelOrBookButton.setText("Book");
+                    holder.nameTextView.setBackgroundResource(R.color.imageTextBackground);
+
+                    setBookButtonClickListener(holder, appointment);
+
+                } else {
+                    holder.nameTextView.setVisibility(View.GONE);
+                    holder.cancelOrBookButton.setEnabled(false);
+                    holder.cancelOrBookButton.setText("Book");
+                }
+            }
+        }else { // business owner can cancel appointments of every customer
+            if (!(context instanceof AppointmentActivity)) {
+                System.out.println("oh-oh got here when I shouldnt");
+                if (appointment.isAvailable()) {
+                    holder.cancelOrBookButton.setText("Cancel");
+                    holder.cancelOrBookButton.setEnabled(false);
+                    holder.nameTextView.setVisibility(View.VISIBLE);
+                    holder.nameTextView.setText("Free");
+                    holder.nameTextView.setBackgroundResource(R.color.imageTextBackground);
+                } else {
+                    holder.nameTextView.setVisibility(View.VISIBLE);
+                    holder.nameTextView.setText(appointment.getBookingUserName()); //get from Server
+                    holder.cancelOrBookButton.setText("Cancel");
+                    holder.cancelOrBookButton.setEnabled(true);
+                    holder.nameTextView.setBackgroundResource(R.color.imageTextBackground);
+                    setCancelButtonClickListener(holder, appointment);
+                }
             }
         }
     }
@@ -94,8 +115,16 @@ public class AppointmentsAdapter extends RecyclerView.Adapter<AppointmentsAdapte
                 try {
                     int status = new JSONObject(response).getInt("status");
                     if (status == 200) {
-                        holder.cancelOrBookButton.post(() -> holder.cancelOrBookButton.setEnabled(false));
-                        holder.cancelOrBookButton.post(() -> holder.cancelOrBookButton.setText("Cancelled"));
+                        if (!(context instanceof AppointmentActivity)) {
+                            holder.cancelOrBookButton.post(() -> holder.cancelOrBookButton.setEnabled(false));
+                            holder.cancelOrBookButton.post(() -> holder.cancelOrBookButton.setText("Cancelled"));
+                        }
+
+                        else {
+                            ((AppointmentActivity) context).refreshAppointments();
+                        }
+
+
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();

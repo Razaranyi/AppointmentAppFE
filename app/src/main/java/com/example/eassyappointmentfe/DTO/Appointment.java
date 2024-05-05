@@ -20,8 +20,9 @@ public class Appointment {
     private Long serviceProviderId;
     private Long bookingId;
     private String bookingUserName;
+    private String bookedBusinessName;
 
-    public Appointment(Long id, Date startTime, Date endTime, Boolean isAvailable, Long serviceProviderId, Long bookingId,String bookingUserName) {
+    public Appointment(Long id, Date startTime, Date endTime, Boolean isAvailable, Long serviceProviderId, Long bookingId,String bookingUserName, String bookedBusinessName) {
         this.id = id;
         this.startTime = startTime;
         this.endTime = endTime;
@@ -33,12 +34,16 @@ public class Appointment {
         if (bookingUserName != null) {
             this.bookingUserName = bookingUserName;
         }
+        if (bookedBusinessName != null) {
+            this.bookedBusinessName = bookedBusinessName;
+        }
 
     }
 
     public static List<Appointment> parseAppointments(String jsonResponse) {
         List<Appointment> appointments = new ArrayList<>();
         String bookingUserName = null;
+        String bookedBusinessName = null;
         try {
             JSONArray jsonArray = new JSONArray(jsonResponse);
             for (int i = 0; i < jsonArray.length(); i++) {
@@ -51,6 +56,9 @@ public class Appointment {
                 if (jsonObject.has("bookingUserName")) {
                   bookingUserName =   jsonObject.getString("bookingUserName");
                 }
+                if (jsonObject.has("bookedBusinessName")) {
+                    bookedBusinessName =   jsonObject.getString("bookedBusinessName");
+                }
                 Appointment appointment = new Appointment(
                         jsonObject.getLong("id"),
                         new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.getDefault()).parse(jsonObject.getString("startTime")),
@@ -58,9 +66,8 @@ public class Appointment {
                         jsonObject.getBoolean("isAvailable"),
                         jsonObject.getLong("serviceProviderId"),
                         jsonObject.getLong("bookingId"),
-                        bookingUserName
-
-
+                        bookingUserName,
+                        bookedBusinessName
                 );
 
                 System.out.println("parsed appointment: " + appointment.toString());
@@ -95,6 +102,10 @@ public class Appointment {
 
     public String getBookingUserName() {
         return bookingUserName;
+    }
+
+    public String getBookedBusinessName() {
+        return bookedBusinessName;
     }
 
     @Override

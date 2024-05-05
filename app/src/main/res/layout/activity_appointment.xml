@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".userActivity.AppointmentActivity">
+
+    <TextView
+        android:id="@+id/headerTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="My Appointments"
+        android:textSize="24sp"
+        android:gravity="center"
+        android:padding="16dp"
+        android:textStyle="bold" />
+
+    <LinearLayout
+        android:id="@+id/linearLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_below="@+id/headerTextView">
+
+        <EditText
+            android:id="@+id/tvDate1"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Select Date"
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+            android:padding="16dp"
+            android:focusable="false"
+            android:clickable="true" />
+
+        <EditText
+            android:id="@+id/tvDate2"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Select Date"
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+            android:padding="16dp"
+            android:focusable="false"
+            android:clickable="true" />
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/noAppointmentsTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="No appointments on this day between the given dates..."
+        android:visibility="gone"
+        android:gravity="center"
+        android:layout_marginTop="18dp"
+        android:textSize="20dp"
+        android:layout_below="@+id/linearLayout"/>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/appointmentsRecyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/noAppointmentsTextView" />
+
+</RelativeLayout>
