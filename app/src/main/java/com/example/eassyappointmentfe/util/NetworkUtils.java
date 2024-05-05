@@ -2,7 +2,15 @@ package com.example.eassyappointmentfe.util;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
+import android.widget.Toast;
+
+import androidx.annotation.UiThread;
+
+import com.example.eassyappointmentfe.JWTException;
+import com.example.eassyappointmentfe.authActivity.LoginActivity;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -33,14 +41,14 @@ public class NetworkUtils {
     /**
      * Performs a POST request to the specified URL with the provided JSON data.
      *
-     * @param uri The URL to send the POST request to.
-     * @param postData  The JSON object containing the data to be sent with the request.
+     * @param uri             The URL to send the POST request to.
+     * @param postData        The JSON object containing the data to be sent with the request.
      * @param isTokenRequired A boolean indicating whether the request requires a token.
      * @return A JSONObject containing the response code and the response body.
      */
     public static JSONObject performPostRequest(Context context, String uri, JSONObject postData, boolean isTokenRequired) {
         System.out.println("perform post request method" +
-                        "\n url: " + uri );
+                "\n url: " + uri);
         HttpURLConnection connection = null;
         JSONObject responseJson = new JSONObject();
         String finalUrl = BASE_URL + uri;
@@ -163,7 +171,7 @@ public class NetworkUtils {
     /**
      * Performs a GET request to the specified URL.
      *
-     * @param uri The URL to send the GET request to.
+     * @param uri             The URL to send the GET request to.
      * @param isTokenRequired A boolean indicating whether the request requires a token.
      * @return A string containing the response body.
      */
@@ -186,8 +194,13 @@ public class NetworkUtils {
             }
             urlConnection.connect();
 
+            int responseCode = urlConnection.getResponseCode();
+            if (responseCode == HttpURLConnection.HTTP_UNAUTHORIZED) {
+                throw new JWTException("Token has expired. Please log in again.");
+            }
+
             InputStream in;
-            if (urlConnection.getResponseCode() == HttpURLConnection.HTTP_OK) {
+            if (responseCode == HttpURLConnection.HTTP_OK) {
                 in = new BufferedInputStream(urlConnection.getInputStream());
             } else {
                 in = new BufferedInputStream(urlConnection.getErrorStream());
@@ -198,6 +211,12 @@ public class NetworkUtils {
             while ((line = reader.readLine()) != null) {
                 result.append(line);
             }
+        } catch (Exception e) {
+            System.out.println("Exception caught: " + e.toString());
+            if (e instanceof JWTException) {
+                handleJWTException(context);
+            }
+            throw e;
         } finally {
             if (urlConnection != null) {
                 urlConnection.disconnect();
@@ -258,6 +277,7 @@ public class NetworkUtils {
             return response.optString(key);
         }
     }
+
     public static boolean[] convertJsonArrayToBooleanArray(JSONArray jsonArray) throws JSONException {
         boolean[] workingDays = new boolean[jsonArray.length()];
         for (int i = 0; i < jsonArray.length(); i++) {
@@ -274,7 +294,17 @@ public class NetworkUtils {
         return resultSet;
     }
 
+    private static void handleJWTException(Context context) {
+        // Create a new Handler to run code on the UI thread
+        new Handler(Looper.getMainLooper()).post(() -> {
+            // Display a toast message
+            Toast.makeText(context, "Token has expired. Please log in again.", Toast.LENGTH_LONG).show();
 
-
+            // Redirect to LoginActivity
+            Intent intent = new Intent(context, LoginActivity.class);
+            context.startActivity(intent);
+        });
+    }
 }
+
 
