@@ -62,7 +62,8 @@ public class AppointmentsAdapter extends RecyclerView.Adapter<AppointmentsAdapte
         if (isCustomer) { //handle if user is customer
             //costumer in My Appointments page can cancel his own appointments
             if (context instanceof AppointmentActivity) {
-                holder.nameTextView.setVisibility(View.GONE);
+                holder.nameTextView.setVisibility(View.VISIBLE);
+                holder.nameTextView.setText(appointment.getBookedBusinessName());
                 holder.cancelOrBookButton.setVisibility(View.VISIBLE);
                 holder.cancelOrBookButton.setText("Cancel");
                 holder.nameTextView.setBackgroundResource(R.color.imageTextBackground);
@@ -86,7 +87,7 @@ public class AppointmentsAdapter extends RecyclerView.Adapter<AppointmentsAdapte
             }
         }else { // business owner can cancel appointments of every customer
             if (!(context instanceof AppointmentActivity)) {
-
+                System.out.println("oh-oh got here when I shouldnt");
                 if (appointment.isAvailable()) {
                     holder.cancelOrBookButton.setText("Cancel");
                     holder.cancelOrBookButton.setEnabled(false);
@@ -114,10 +115,12 @@ public class AppointmentsAdapter extends RecyclerView.Adapter<AppointmentsAdapte
                 try {
                     int status = new JSONObject(response).getInt("status");
                     if (status == 200) {
-                        holder.cancelOrBookButton.post(() -> holder.cancelOrBookButton.setEnabled(false));
-                        holder.cancelOrBookButton.post(() -> holder.cancelOrBookButton.setText("Cancelled"));
+                        if (!(context instanceof AppointmentActivity)) {
+                            holder.cancelOrBookButton.post(() -> holder.cancelOrBookButton.setEnabled(false));
+                            holder.cancelOrBookButton.post(() -> holder.cancelOrBookButton.setText("Cancelled"));
+                        }
 
-                        if (context instanceof AppointmentActivity) {
+                        else {
                             ((AppointmentActivity) context).refreshAppointments();
                         }
 
