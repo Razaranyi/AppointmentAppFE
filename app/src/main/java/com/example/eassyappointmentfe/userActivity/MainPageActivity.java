@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Base64;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -41,6 +42,8 @@ public class MainPageActivity extends AppCompatActivity {
     private EditText searchInput;
     private TextView customerStatus;
 
+    private Button myAppointmentButton;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,7 +53,9 @@ public class MainPageActivity extends AppCompatActivity {
         RecyclerView rvCategories = findViewById(R.id.rvCategories);
         searchInput = findViewById(R.id.searchInput);
         customerStatus = findViewById(R.id.customerStatus);
+        myAppointmentButton = findViewById(R.id.btnAppointments);
         setUpCustomerStatus();
+        setUpAppointmentsButton();
 
 
 
@@ -79,6 +84,13 @@ public class MainPageActivity extends AppCompatActivity {
         });
 
 
+    }
+
+    private void setUpAppointmentsButton() {
+        myAppointmentButton.setOnClickListener(v -> {
+            Intent intent = new Intent(MainPageActivity.this, AppointmentActivity.class);
+            startActivity(intent);
+        });
     }
 
     private void populatePage() {

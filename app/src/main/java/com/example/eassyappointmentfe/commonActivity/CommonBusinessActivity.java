@@ -373,20 +373,19 @@ public class CommonBusinessActivity extends AppCompatActivity implements BranchA
             noAppointmentsText.setVisibility(View.GONE);
         }
         if (appointmentsRecyclerView.getAdapter() == null) {
-            appointmentsRecyclerView.setAdapter(new AppointmentsAdapter(appointments, isCustomer));
+            appointmentsRecyclerView.setAdapter(new AppointmentsAdapter(this,appointments, isCustomer));
         } else {
             ((AppointmentsAdapter) appointmentsRecyclerView.getAdapter()).updateData(appointments);
         }
     }
 
     private void setUpDatePicker() {
-    tvDate.setOnClickListener(v -> {
-        TimeUtil.showDatePickerDialog(this, tvDate);
-
-        // Fetch appointments for the selected date
-        if (serviceProviderAdapter.getSelectedServiceProviderId() != 0) {
-            fetchAppointments(serviceProviderAdapter.getSelectedServiceProviderId(),tvDate.getText().toString());
-        }
-    });
-}
+        tvDate.setOnClickListener(v -> {
+            TimeUtil.showDatePickerDialog(this, tvDate, () -> {
+                if (serviceProviderAdapter.getSelectedServiceProviderId() != 0) {
+                    fetchAppointments(serviceProviderAdapter.getSelectedServiceProviderId(), tvDate.getText().toString());
+                }
+            });
+        });
+    }
 }
