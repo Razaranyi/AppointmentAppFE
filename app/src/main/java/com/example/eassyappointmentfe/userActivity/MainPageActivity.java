@@ -17,6 +17,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.eassyappointmentfe.DTO.Business;
 import com.example.eassyappointmentfe.DTO.Category;
+import com.example.eassyappointmentfe.JWTException;
 import com.example.eassyappointmentfe.R;
 import com.example.eassyappointmentfe.adapters.CategoriesAdapter;
 import com.example.eassyappointmentfe.commonActivity.CommonBusinessActivity;
