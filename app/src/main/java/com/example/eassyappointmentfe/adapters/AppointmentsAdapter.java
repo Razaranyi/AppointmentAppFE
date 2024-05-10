@@ -25,18 +25,37 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Locale;
 
+/**
+ * Adapter for the RecyclerView in the AppointmentActivity.
+ * It handles the display of appointments and the booking/canceling of appointments.
+ */
+
 public class AppointmentsAdapter extends RecyclerView.Adapter<AppointmentsAdapter.AppointmentViewHolder> {
     private List<Appointment> appointments;
     private boolean isCustomer;
     private Context context;
 
 
+    /**
+     * Constructor for the AppointmentsAdapter.
+     *
+     * @param context      The context of the activity.
+     * @param appointments The list of appointments to be displayed.
+     * @param isCustomer   A boolean indicating if the user is a customer or a business owner.
+     */
     public AppointmentsAdapter(Context context, List<Appointment> appointments, boolean isCustomer) {
         this.appointments = appointments;
         this.isCustomer = isCustomer;
         this.context = context;
     }
 
+    /**
+     * Creates a new AppointmentViewHolder.
+     *
+     * @param parent   The parent view.
+     * @param viewType The view type.
+     * @return A new AppointmentViewHolder.
+     */
     @NonNull
     @Override
     public AppointmentViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -44,6 +63,12 @@ public class AppointmentsAdapter extends RecyclerView.Adapter<AppointmentsAdapte
         return new AppointmentViewHolder(view);
     }
 
+    /**
+     * Binds the data to the AppointmentViewHolder.
+     *
+     * @param holder   The AppointmentViewHolder.
+     * @param position The position of the item in the list.
+     */
     @Override
     public void onBindViewHolder(@NonNull AppointmentViewHolder holder, int position) {
         Appointment appointment = appointments.get(position);
@@ -106,6 +131,12 @@ public class AppointmentsAdapter extends RecyclerView.Adapter<AppointmentsAdapte
         }
     }
 
+    /**
+     * Sets the click listener for the cancel button.
+     *
+     * @param holder      The AppointmentViewHolder.
+     * @param appointment The appointment to be canceled.
+     */
     private void setCancelButtonClickListener(AppointmentViewHolder holder, Appointment appointment) {
         holder.cancelOrBookButton.setOnClickListener(v -> {
             new Thread(() -> {
@@ -133,6 +164,13 @@ public class AppointmentsAdapter extends RecyclerView.Adapter<AppointmentsAdapte
         });
     }
 
+
+    /**
+     * Sets the click listener for the book button.
+     *
+     * @param holder      The AppointmentViewHolder.
+     * @param appointment The appointment to be booked.
+     */
     private void setBookButtonClickListener(AppointmentViewHolder holder, Appointment appointment) {
     holder.cancelOrBookButton.setOnClickListener(v -> {
         JSONObject bookingData = new JSONObject();
@@ -162,6 +200,14 @@ public class AppointmentsAdapter extends RecyclerView.Adapter<AppointmentsAdapte
     });
 }
 
+/**
+ * Inserts the booking data into the JSONObject.
+ *
+ * @param bookingData  The JSONObject to insert the data into.
+ * @param appointments The JSONArray of appointments.
+ * @param rootObject   The root JSONObject.
+ * @param appointment  The appointment to be booked.
+ */
 private void insertBookingData(JSONObject bookingData, JSONArray appointments, JSONObject rootObject, Appointment appointment) {
     try {
         bookingData.put("appointmentsIds", appointments);
@@ -175,10 +221,20 @@ private void insertBookingData(JSONObject bookingData, JSONArray appointments, J
 
 }
 
+
+    /**
+     * Returns the number of items in the list.
+     * @return
+     */
     @Override
     public int getItemCount() {
         return appointments != null ? appointments.size() : 0;
     }
+
+    /**
+     * Updates the data in the list.
+     * @param newAppointments The new list of appointments.
+     */
 
     public void updateData(List<Appointment> newAppointments) {
         appointments.clear();
@@ -186,6 +242,9 @@ private void insertBookingData(JSONObject bookingData, JSONArray appointments, J
         notifyDataSetChanged();
     }
 
+    /**
+     * ViewHolder for the RecyclerView.
+     */
     class AppointmentViewHolder extends RecyclerView.ViewHolder {
         private final TextView startTimeTextView, endTimeTextView, nameTextView;
         private final Button cancelOrBookButton;

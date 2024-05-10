@@ -9,7 +9,6 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.eassyappointmentfe.DTO.Business;
@@ -20,6 +19,10 @@ import com.example.eassyappointmentfe.util.NetworkUtils;
 import org.json.JSONObject;
 
 import java.util.List;
+
+/**
+ * Adapter for the business recycler view.
+ */
 
 public class BusinessAdapter extends RecyclerView.Adapter<BusinessAdapter.BusinessViewHolder> {
 
@@ -34,12 +37,25 @@ public class BusinessAdapter extends RecyclerView.Adapter<BusinessAdapter.Busine
     }
 
 
+    /**
+     * Creates a new view holder.
+     *
+     * @param parent The parent view group.
+     * @param viewType The view type.
+     * @return The new view holder.
+     */
     @Override
     public BusinessViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_business, parent, false);
         return new BusinessViewHolder(view);
     }
 
+    /**
+     * Binds the view holder to the business at the specified position.
+     *
+     * @param holder The view holder.
+     * @param position The position of the business in the list.
+     */
     @Override
     public void onBindViewHolder(BusinessViewHolder holder, int position) {
         Business business = businesses.get(position);
@@ -55,6 +71,12 @@ public class BusinessAdapter extends RecyclerView.Adapter<BusinessAdapter.Busine
 
     }
 
+    /**
+     * Updates the favorite status of the business.
+     *
+     * @param id The ID of the business.
+     */
+
     private void updateFavoriteStatus(long id) {
         new Thread(() -> {
             try {
@@ -69,6 +91,12 @@ public class BusinessAdapter extends RecyclerView.Adapter<BusinessAdapter.Busine
         }).start();
     }
 
+    /**
+     * Returns the number of businesses in the list.
+     *
+     * @return The number of businesses.
+     */
+
     @Override
     public int getItemCount() {
         return businesses.size();
@@ -77,11 +105,20 @@ public class BusinessAdapter extends RecyclerView.Adapter<BusinessAdapter.Busine
         void onBusinessClick(Business business);
     }
 
+    /**
+     * View holder for the business recycler view.
+     */
+
     public class BusinessViewHolder extends RecyclerView.ViewHolder {
         private final TextView tvBusinessName;
         private final ImageView ivBusinessImage;
         private final ImageView imgFavorite;
 
+        /**
+         * Creates a new business view holder.
+         *
+         * @param itemView The view.
+         */
         public BusinessViewHolder(View itemView) {
             super(itemView);
             tvBusinessName = itemView.findViewById(R.id.tvBusinessName);
@@ -90,16 +127,18 @@ public class BusinessAdapter extends RecyclerView.Adapter<BusinessAdapter.Busine
 
         }
 
+        /**
+         * Binds the view holder to the business.
+         *
+         * @param business The business.
+         */
+
         public void bind(Business business) {
             tvBusinessName.setText(business.getName());
             ivBusinessImage.setImageURI(business.getBusinessImage());
 
             itemView.setOnClickListener(v -> {
                 Intent intent = new Intent(context, CommonBusinessActivity.class);
-                System.out.println("" +
-                        "Business Adapter:\n" +
-                        "Business ID: " + business.getId()
-                        + " Business Name: " + business.getName() );
                 intent.putExtra("businessName", business.getName());
                 intent.putExtra("businessId", String.valueOf(business.getId()));
                 intent.putExtra("isCustomer", true);

@@ -21,12 +21,21 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
+/**
+ * Activity to display user appointments.
+ * It allows users to view their appointments within a specified date range.
+ */
 public class AppointmentActivity extends AppCompatActivity {
 
     private EditText tvDate1;
     private EditText tvDate2;
     private RecyclerView appointmentsRecyclerView;
 
+    /**
+     * Initializes the activity.
+     *
+     * @param savedInstanceState If the activity is being re-initialized after previously being shut down then this Bundle contains the data it most recently supplied in onSaveInstanceState(Bundle). Note: Otherwise it is null.
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -40,6 +49,9 @@ public class AppointmentActivity extends AppCompatActivity {
         fetchAppointments(tvDate1.getText().toString(), tvDate2.getText().toString());
     }
 
+    /**
+     * Set up date picker for selecting date range.
+     */
     private void setUpDatePicker() {
         String currentDate = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(new Date());
         String nextWeekDate = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(new Date(System.currentTimeMillis() + 7 * 24 * 60 * 60 * 1000));
@@ -63,6 +75,12 @@ public class AppointmentActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * Fetch appointments within the specified date range.
+     *
+     * @param startDate Start date of the date range.
+     * @param endDate   End date of the date range.
+     */
     private void fetchAppointments(String startDate, String endDate) {
     new Thread(() -> {
         try {
@@ -82,6 +100,12 @@ public class AppointmentActivity extends AppCompatActivity {
     }).start();
 }
 
+
+    /**
+     * Updates the appointments recycler view with the fetched appointments.
+     *
+     * @param appointments List of appointments to display.
+     */
     private void updateAppointmentsRecyclerView(List<Appointment> appointments) {
         TextView noAppointmentsTextView = findViewById(R.id.noAppointmentsTextView);
         if (appointments.isEmpty()) {
@@ -100,6 +124,9 @@ public class AppointmentActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Refreshes the appointments list.
+     */
     public void refreshAppointments() {
         fetchAppointments(tvDate1.getText().toString(), tvDate2.getText().toString());
     }

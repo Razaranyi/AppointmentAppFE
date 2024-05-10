@@ -18,11 +18,10 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.eassyappointmentfe.DTO.Business;
 import com.example.eassyappointmentfe.DTO.Category;
-import com.example.eassyappointmentfe.JWTException;
 import com.example.eassyappointmentfe.R;
 import com.example.eassyappointmentfe.adapters.CategoriesAdapter;
-import com.example.eassyappointmentfe.commonActivity.CommonBusinessActivity;
 import com.example.eassyappointmentfe.businessActivity.CreateBusinessActivity;
+import com.example.eassyappointmentfe.commonActivity.CommonBusinessActivity;
 import com.example.eassyappointmentfe.util.ImageUtils;
 import com.example.eassyappointmentfe.util.NetworkUtils;
 
@@ -35,6 +34,10 @@ import java.net.HttpURLConnection;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * This class represents the main page of the application.
+ * It displays the categories of businesses and allows users to search for businesses.
+ */
 public class MainPageActivity extends AppCompatActivity {
 
     private List<Category> categories = new ArrayList<>();
@@ -45,6 +48,11 @@ public class MainPageActivity extends AppCompatActivity {
     private Button myAppointmentButton;
 
 
+    /**
+     * Initializes the activity.
+     *
+     * @param savedInstanceState If the activity is being re-initialized after previously being shut down then this Bundle contains the data it most recently supplied in onSaveInstanceState(Bundle). Note: Otherwise it is null.
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -86,6 +94,10 @@ public class MainPageActivity extends AppCompatActivity {
 
     }
 
+    /**
+     * Sets up the appointments button to navigate to the appointments activity.
+     */
+
     private void setUpAppointmentsButton() {
         myAppointmentButton.setOnClickListener(v -> {
             Intent intent = new Intent(MainPageActivity.this, AppointmentActivity.class);
@@ -93,6 +105,9 @@ public class MainPageActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * Fetches the businesses and categories to populate the main page.
+     */
     private void populatePage() {
         new Thread(() -> {
             try {
@@ -124,6 +139,15 @@ public class MainPageActivity extends AppCompatActivity {
         }).start();
     }
 
+    /**
+     * Fetches a business by its ID.
+     *
+     * @param businessId The ID of the business to fetch.
+     * @param isFavorite Whether the business is a favorite.
+     * @return The fetched business.
+     * @throws JSONException If there is an error parsing the JSON response.
+     * @throws IOException   If there is an error fetching the business.
+     */
     private Business fetchBusinessById(long businessId, boolean isFavorite) throws JSONException, IOException {
         String response = NetworkUtils.performGetRequest(
                 this,
@@ -133,6 +157,9 @@ public class MainPageActivity extends AppCompatActivity {
         return parseBusiness(jsonObject.getJSONObject("data"), isFavorite);
     }
 
+    /**
+     * Fetches the other categories of businesses.
+     */
     private void fetchOtherCategories() {
         new Thread(() -> {
             try {
@@ -150,6 +177,12 @@ public class MainPageActivity extends AppCompatActivity {
         }).start();
     }
 
+    /**
+     * Parses the JSON response to extract category and business information.
+     *
+     * @param response The JSON response from the server.
+     * @return List of categories.
+     */
     private List<Category> parseCategoriesAndBusinesses(String response) {
         List<Category> categories = new ArrayList<>();
         try {
@@ -167,6 +200,12 @@ public class MainPageActivity extends AppCompatActivity {
         return categories;
     }
 
+    /**
+     * Fetches the businesses for a category.
+     *
+     * @param businessIdsJsonArray The JSON array of business IDs.
+     * @return List of businesses.
+     */
     private List<Business> getBusinessesForCategory(JSONArray businessIdsJsonArray) {
         List<Business> businesses = new ArrayList<>();
         try {
@@ -181,6 +220,13 @@ public class MainPageActivity extends AppCompatActivity {
         return businesses;
     }
 
+    /**
+     * Parses the JSON response to extract business information.
+     *
+     * @param businessJson The JSON object containing business information.
+     * @param isFavorite   Whether the business is a favorite.
+     * @return The parsed business.
+     */
     private Business parseBusiness(JSONObject businessJson, boolean isFavorite) {
         try {
             long id = businessJson.getLong("id");
@@ -195,6 +241,9 @@ public class MainPageActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Fetches categories from the server and populates the category spinners.
+     */
     private void setUpCustomerStatus() {
         customerStatus.setOnClickListener(v -> {
             new Thread(() -> {

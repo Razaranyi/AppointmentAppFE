@@ -16,33 +16,61 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.eassyappointmentfe.DTO.Business;
 import com.example.eassyappointmentfe.DTO.Category;
 import com.example.eassyappointmentfe.R;
-import com.example.eassyappointmentfe.adapters.BusinessAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
+
+/**
+ * Adapter for the categories recycler view.
+ */
 
 public class CategoriesAdapter extends RecyclerView.Adapter<CategoriesAdapter.CategoryViewHolder> implements Filterable {
     private final Context context;
     private List<Category> categories;
     private List<Category> categoryListFull;
+
+    /**
+     * Initializes the adapter.
+     *
+     * @param context The application context.
+     * @param categories The list of categories to display.
+     */
     public CategoriesAdapter(Context context, List<Category> categories) {
         this.context = context;
         this.categories = categories;
         this.categoryListFull = new ArrayList<>(categories);
     }
 
+    /**
+     * Sets the list of categories to display.
+     *
+     * @param newCategories The new list of categories.
+     */
     public void setCategories(List<Category> newCategories) {
         this.categories = new ArrayList<>(newCategories);
         this.categoryListFull = new ArrayList<>(newCategories);
         notifyDataSetChanged();
     }
 
+    /**
+     * Creates a new view holder.
+     *
+     * @param parent The parent view group.
+     * @param viewType The view type.
+     * @return The new view holder.
+     */
     @Override
     public CategoryViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.category_item, parent, false);
         return new CategoryViewHolder(view);
     }
 
+    /**
+     * Binds the view holder to the category at the specified position.
+     *
+     * @param holder The view holder.
+     * @param position The position of the category in the list.
+     */
     @Override
     public void onBindViewHolder(CategoryViewHolder holder, int position) {
         Category category = categories.get(position);
@@ -55,11 +83,21 @@ public class CategoriesAdapter extends RecyclerView.Adapter<CategoriesAdapter.Ca
         }
     }
 
+    /**
+     * Returns the number of categories in the list.
+     *
+     * @return The number of categories.
+     */
     @Override
     public int getItemCount() {
         return categories.size();
     }
 
+    /**
+     * Returns the filter for the adapter.
+     *
+     * @return The filter.
+     */
     @Override
     public Filter getFilter() {
         return businessFilter;
@@ -90,6 +128,12 @@ public class CategoriesAdapter extends RecyclerView.Adapter<CategoriesAdapter.Ca
             return results;
         }
 
+        /**
+         * Publishes the results of the filtering operation.
+         *
+         * @param constraint The constraint used to filter the list.
+         * @param results The results of the filtering operation.
+         */
         @SuppressLint("NotifyDataSetChanged")
         @Override
         protected void publishResults(CharSequence constraint, FilterResults results) {
@@ -100,10 +144,19 @@ public class CategoriesAdapter extends RecyclerView.Adapter<CategoriesAdapter.Ca
     };
 
 
+    /**
+     * View holder for the category recycler view.
+     */
+
     public class CategoryViewHolder extends RecyclerView.ViewHolder {
         private final RecyclerView rvHorizontalBusinesses;
         TextView tvCategoryName;
 
+        /**
+         * Creates a new category view holder.
+         *
+         * @param itemView The view.
+         */
         public CategoryViewHolder(View itemView) {
             super(itemView);
             rvHorizontalBusinesses = itemView.findViewById(R.id.rvHorizontalBusinesses);
@@ -111,6 +164,11 @@ public class CategoriesAdapter extends RecyclerView.Adapter<CategoriesAdapter.Ca
             tvCategoryName = itemView.findViewById(R.id.tvCategoryName);
         }
 
+        /**
+         * Binds the view holder to the category.
+         *
+         * @param category The category.
+         */
         public void bind(Category category) {
             BusinessAdapter adapter = new BusinessAdapter(context, category.getBusinesses(), null);
             rvHorizontalBusinesses.setAdapter(adapter);
