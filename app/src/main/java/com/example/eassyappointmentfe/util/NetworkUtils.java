@@ -7,8 +7,6 @@ import android.os.Looper;
 import android.util.Log;
 import android.widget.Toast;
 
-import androidx.annotation.UiThread;
-
 import com.example.eassyappointmentfe.JWTException;
 import com.example.eassyappointmentfe.authActivity.LoginActivity;
 
@@ -19,7 +17,6 @@ import org.json.JSONObject;
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -32,6 +29,10 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
+
+/**
+ * This class contains utility methods for network operations.
+ */
 public class NetworkUtils {
 
     private static final String TAG = "NetworkUtil";
@@ -112,6 +113,14 @@ public class NetworkUtils {
         return responseJson;
     }
 
+    /**
+     * Performs a DELETE request to the specified URL.
+     *
+     * @param context The application context.
+     * @param uri     The URL to send the DELETE request to.
+     * @return A JSONObject containing the response code and the response body.
+     */
+
     // had to change configuration in spring boot to allow it not across HTTPS but HTTP, therefore its not in used but cancelling booking can be done here theoretically
     public static JSONObject performDeleteRequest(Context context, String uri) {
         System.out.println("perform delete request method" +
@@ -171,9 +180,11 @@ public class NetworkUtils {
     /**
      * Performs a GET request to the specified URL.
      *
+     * @param context         The application context.
      * @param uri             The URL to send the GET request to.
      * @param isTokenRequired A boolean indicating whether the request requires a token.
      * @return A string containing the response body.
+     * @throws IOException If an I/O error occurs.
      */
 
     public static String performGetRequest(Context context, String uri, boolean isTokenRequired) throws IOException {
@@ -226,6 +237,12 @@ public class NetworkUtils {
         return result.toString();
     }
 
+    /**
+     * Retrieves the business ID.
+     *
+     * @param context The application context.
+     * @return The business ID.
+     */
     public static String getBusinessId(Context context) {
         ExecutorService executor = Executors.newSingleThreadExecutor();
         Future<String> result = executor.submit(() -> {
@@ -247,6 +264,14 @@ public class NetworkUtils {
         }
     }
 
+
+    /**
+     * Processes the response from the server.
+     *
+     * @param response The server response.
+     * @param key      The key to extract from the response.
+     * @return The value associated with the key in the response.
+     */
     public static String processResponse(JSONObject response, String key) {
         System.out.println("process response method: " + response.toString() + " key: " + key);
 
@@ -278,6 +303,13 @@ public class NetworkUtils {
         }
     }
 
+    /**
+     * Converts a JSONArray to a boolean array.
+     *
+     * @param jsonArray The JSONArray to convert.
+     * @return The converted boolean array.
+     * @throws JSONException If a JSON error occurs.
+     */
     public static boolean[] convertJsonArrayToBooleanArray(JSONArray jsonArray) throws JSONException {
         boolean[] workingDays = new boolean[jsonArray.length()];
         for (int i = 0; i < jsonArray.length(); i++) {
@@ -285,7 +317,13 @@ public class NetworkUtils {
         }
         return workingDays;
     }
-
+    /**
+     * Converts a JSONArray to a Set of Longs.
+     *
+     * @param jsonArray The JSONArray to convert.
+     * @return The converted Set of Longs.
+     * @throws JSONException If a JSON error occurs.
+     */
     public static Set<Long> convertJsonArrayToSet(JSONArray jsonArray) throws JSONException {
         Set<Long> resultSet = new HashSet<>();
         for (int i = 0; i < jsonArray.length(); i++) {
@@ -294,6 +332,12 @@ public class NetworkUtils {
         return resultSet;
     }
 
+
+    /**
+     * Handles JWT exceptions by displaying a toast message and redirecting to the login activity.
+     *
+     * @param context The application context.
+     */
     private static void handleJWTException(Context context) {
         // Create a new Handler to run code on the UI thread
         new Handler(Looper.getMainLooper()).post(() -> {

@@ -6,18 +6,23 @@ import android.content.Context;
 import android.os.Build;
 import android.widget.EditText;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-
 import java.text.SimpleDateFormat;
 import java.time.LocalTime;
 import java.util.Calendar;
-import java.util.HashSet;
 import java.util.Locale;
-import java.util.Set;
 
+
+/**
+ * This class contains utility methods for handling time-related operations.
+ */
 public class TimeUtil {
 
+    /**
+     * Displays a time picker dialog and sets the selected time to the provided EditText.
+     *
+     * @param context   The application context.
+     * @param timeInput The EditText where the selected time will be set.
+     */
     public static void showTimePickerDialog(Context context, final EditText timeInput) {
         Calendar c = Calendar.getInstance();
         int hour = c.get(Calendar.HOUR_OF_DAY);
@@ -31,6 +36,14 @@ public class TimeUtil {
         timePickerDialog.show();
     }
 
+    /**
+     * Displays a date picker dialog and sets the selected date to the provided EditText.
+     * Executes the provided Runnable after the date is set.
+     *
+     * @param context      The application context.
+     * @param editText     The EditText where the selected date will be set.
+     * @param afterDateSet The Runnable to be executed after the date is set.
+     */
     public static void showDatePickerDialog(Context context, EditText editText, Runnable afterDateSet) {
         Calendar calendar = Calendar.getInstance();
         int year = calendar.get(Calendar.YEAR);
@@ -47,7 +60,12 @@ public class TimeUtil {
         datePickerDialog.show();
     }
 
-
+    /**
+     * Converts a time string to a LocalTime object.
+     *
+     * @param timeString The time string to convert.
+     * @return The converted LocalTime object, or null if the time string is null or empty.
+     */
     public static LocalTime toLocalTime(String timeString) {
         if (timeString == null || timeString.isEmpty()) {
             return null; // or return a default LocalTime value

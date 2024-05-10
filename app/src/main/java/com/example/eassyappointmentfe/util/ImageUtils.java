@@ -90,6 +90,14 @@ public class ImageUtils {
         }
     }
 
+    /**
+     *
+     * @param context
+     * @param image
+     * @param title
+     * @return
+     */
+
     public static Uri getImageUri(Context context, Bitmap image, String title) {
         String imageFileName = title + "_" + System.currentTimeMillis() + ".jpg"; // Unique filename
         ByteArrayOutputStream bytes = new ByteArrayOutputStream();

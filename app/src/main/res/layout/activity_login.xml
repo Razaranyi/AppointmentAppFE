@@ -74,6 +74,7 @@
         android:layout_marginBottom="24dp"
         android:text="Forgot Your Password? Click Here"
         android:textColor="@color/secondary_text_color"
+        android:visibility="gone"
         android:textSize="14sp"
         android:layout_gravity="center_horizontal" />
 
