@@ -26,10 +26,19 @@ import org.json.JSONObject;
 
 import java.net.HttpURLConnection;
 
+/**
+ * This class represents the login activity of the application.
+ * It handles user authentication and navigation to the sign up activity.
+ */
 public class LoginActivity extends AppCompatActivity {
     private EditText userEmail;
     private EditText userPassword;
 
+    /**
+     * Initializes the activity.
+     *
+     * @param savedInstanceState If the activity is being re-initialized after previously being shut down then this Bundle contains the data it most recently supplied in onSaveInstanceState(Bundle). Note: Otherwise it is null.
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -43,6 +52,12 @@ public class LoginActivity extends AppCompatActivity {
         setUpLoginButton();
     }
 
+
+    /**
+     * Sets up the sign up prompt with a clickable span that navigates to the sign up activity.
+     *
+     * @param textViewSignUpPrompt The TextView that contains the sign up prompt.
+     */
     private void setUpClickableSignUpPrompt(TextView textViewSignUpPrompt) {
         String signUpPromptText = getString(R.string.sign_up_prompt);
         SpannableString spannableString = new SpannableString(signUpPromptText);
@@ -60,6 +75,9 @@ public class LoginActivity extends AppCompatActivity {
         textViewSignUpPrompt.setMovementMethod(LinkMovementMethod.getInstance());
     }
 
+    /**
+     * Sets up the login button with a click listener that sends a POST request to the server for user authentication.
+     */
     private void setUpLoginButton() {
         Button loginButton = findViewById(R.id.loginButton);
         loginButton.setOnClickListener(v -> {
@@ -83,6 +101,11 @@ public class LoginActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * Processes the response from the server after user authentication.
+     *
+     * @param response The JSON response from the server.
+     */
     private void processResponse(JSONObject response) {
         try {
             int status = response.getInt("status");
@@ -102,6 +125,12 @@ public class LoginActivity extends AppCompatActivity {
             showToast("An error occurred while processing the response.");
         }
     }
+
+    /**
+     * Displays a toast message on the UI thread.
+     *
+     * @param message The message to display.
+     */
 
     private void showToast(final String message) {
         runOnUiThread(() -> Toast.makeText(LoginActivity.this, message, Toast.LENGTH_LONG).show());

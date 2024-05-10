@@ -34,6 +34,11 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
+
+/**
+ * Activity to create a new employee.
+ * It allows users to input employee information and upload an image.
+ */
 public class CreateNewEmployeeActivity extends AppCompatActivity {
     private final Boolean[] daysOfTheWeek = new Boolean[7];
     private EditText employeeNameInput;
@@ -55,6 +60,11 @@ public class CreateNewEmployeeActivity extends AppCompatActivity {
 
 
 
+    /**
+     * Initializes the activity.
+     *
+     * @param savedInstanceState If the activity is being re-initialized after previously being shut down then this Bundle contains the data it most recently supplied in onSaveInstanceState(Bundle). Note: Otherwise it is null.
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         Intent intent = getIntent();
@@ -88,6 +98,10 @@ public class CreateNewEmployeeActivity extends AppCompatActivity {
 
     }
 
+
+    /**
+     * Sets up the button to add more breaks.
+     */
     private void setupAddMoreBreaksButton() {
         addMoreBreaksButton.setOnClickListener(v -> {
             BreakTimeBottomSheetDialogFragment breakTimeBottomSheetDialogFragment = new BreakTimeBottomSheetDialogFragment();
@@ -96,6 +110,9 @@ public class CreateNewEmployeeActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * Sets up the button to choose days of the week.
+     */
     private void setupDaysOfTheWeekButton(){
         chooseDaysButton.setOnClickListener(v -> {
             DayOfWeekSelectorDialogFragment dayOfWeekSelectorDialogFragment = new DayOfWeekSelectorDialogFragment();
@@ -108,6 +125,9 @@ public class CreateNewEmployeeActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * Sets up the button to create an employee.
+     */
     private void setupCreateEmployeeButton() {
     createEmployeeButton.setOnClickListener(v -> {
         try {
@@ -162,6 +182,12 @@ public class CreateNewEmployeeActivity extends AppCompatActivity {
     });
 }
 
+
+    /**
+     * Handles the selection of an image.
+     *
+     * @param uri The URI of the selected image.
+     */
     private void handleImageSelection(Uri uri) {
         if (uri == null) {
             return;
@@ -170,6 +196,14 @@ public class CreateNewEmployeeActivity extends AppCompatActivity {
     }
 
 
+    /**
+     * Sends the employee data to the server.
+     *
+     * @param employeeData The data of the employee to send.
+     * @throws JSONException If there is an error in the JSON data.
+     * @throws ExecutionException If there is an error in the execution.
+     * @throws InterruptedException If the thread is interrupted.
+     */
     private void sendEmployeeData(JSONObject employeeData) throws JSONException, ExecutionException, InterruptedException {
 
         Thread thread = new Thread(() -> {
@@ -197,6 +231,9 @@ public class CreateNewEmployeeActivity extends AppCompatActivity {
         thread.start();
     }
 
+    /**
+     * Clears the selections in the dialog.
+     */
     private void clearDialogSelections() {
         System.out.println("Trying to clear selections in dialog");
         DayOfWeekSelectorDialogFragment dialogFragment = (DayOfWeekSelectorDialogFragment) getSupportFragmentManager().findFragmentByTag("dayOfWeekSelector");
@@ -208,6 +245,9 @@ public class CreateNewEmployeeActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Sets up the Spinner button.
+     */
    private void setSpinnerButton() {
     // Set the initial text of the Spinner
     List<String> initialList = new ArrayList<>();

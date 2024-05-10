@@ -1,9 +1,6 @@
-//TODO:1 Add functionality of cancel button then remove appointment button
-//TODO:2 Add a button to add business owner
 
 package com.example.eassyappointmentfe.commonActivity;
 
-import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
@@ -39,12 +36,15 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+
+/**
+ * This class represents the common business activity of the application.
+ * It displays the branches and service providers of a business.
+ */
 
 public class CommonBusinessActivity extends AppCompatActivity implements BranchAdapter.OnBranchClickListener, ServiceProviderAdapter.OnServiceProviderClickListener {
 
@@ -69,7 +69,11 @@ public class CommonBusinessActivity extends AppCompatActivity implements BranchA
 
     private boolean isCustomer;
 
-
+    /**
+     * Initializes the activity.
+     *
+     * @param savedInstanceState If the activity is being re-initialized after previously being shut down then this Bundle contains the data it most recently supplied in onSaveInstanceState(Bundle). Note: Otherwise it is null.
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -97,13 +101,17 @@ public class CommonBusinessActivity extends AppCompatActivity implements BranchA
 
 
         setAddBranchText();
-        setUpAppointmentsButton(); //to be removed?
         setAddServiceProviderText();
         setUpCustomerStatus();
         setUpDatePicker();
 
     }
 
+    /**
+     * Initializes the activity.
+     *
+     * @param intent The intent that started the activity.
+     */
     private void initialize(Intent intent) {
         SharedPreferences preferences = getSharedPreferences("com.example.eassyappointmentfe.SHARED_PREFS", MODE_PRIVATE);
         businessId = intent.getStringExtra("businessId");
@@ -124,6 +132,9 @@ public class CommonBusinessActivity extends AppCompatActivity implements BranchA
         tvDate.setText(currentDate);
     }
 
+    /**
+     * Fetches branches from the server.
+     */
     private void fetchBranches() {
         if (businessId == null && !isCustomer) {
             businessId = NetworkUtils.getBusinessId(this);
@@ -148,6 +159,9 @@ public class CommonBusinessActivity extends AppCompatActivity implements BranchA
         }).start();
     }
 
+    /**
+     * Fetches service providers from the server.
+     */
     private void fetchServiceProviders() { //called only when branch is clicked or on start
         System.out.println("Fetching service providers. Branches: " + branches.size() + ",Business ID: " + businessId + " Branch ID: " + branchId);
         if (branches.isEmpty()) {
@@ -182,6 +196,12 @@ public class CommonBusinessActivity extends AppCompatActivity implements BranchA
         }).start();
     }
 
+    /**
+     * Parses the JSON response to extract service provider information.
+     *
+     * @param response The JSON response from the server.
+     * @return List of service providers.
+     */
     private List<ServiceProvider> parseServiceProviders(String response) {
         List<ServiceProvider> serviceProviders = new ArrayList<>();
         try {
@@ -220,6 +240,12 @@ public class CommonBusinessActivity extends AppCompatActivity implements BranchA
         return serviceProviders;
     }
 
+    /**
+     * Parses the JSON response to extract branch information.
+     *
+     * @param response The JSON response from the server.
+     * @return List of branches.
+     */
     private List<Branch> parseBranches(String response) {
         List<Branch> branches = new ArrayList<>();
         try {
@@ -258,6 +284,12 @@ public class CommonBusinessActivity extends AppCompatActivity implements BranchA
         return branches;
     }
 
+
+    /**
+     * Updates the branches in the recycler view.
+     *
+     * @param newBranches The new list of branches.
+     */
     private void updateBranches(List<Branch> newBranches) {
         branchAdapter = new BranchAdapter(this, newBranches, this);
         branchRecyclerView.setAdapter(branchAdapter);
@@ -266,11 +298,19 @@ public class CommonBusinessActivity extends AppCompatActivity implements BranchA
 
     }
 
+    /**
+     * Updates the service providers in the recycler view.
+     *
+     * @param newServiceProviders The new list of service providers.
+     */
     private void updateServiceProviders(List<ServiceProvider> newServiceProviders) {
         serviceProviderAdapter = new ServiceProviderAdapter(this, newServiceProviders, this);
         serviceProviderRecyclerView.setAdapter(serviceProviderAdapter);
     }
 
+    /**
+     * Sets up the branch recycler view.
+     */
     private void setUpBranchRecyclerView() {
         branchRecyclerView = findViewById(R.id.branchesRecyclerView);
         branchRecyclerView.setLayoutManager(new LinearLayoutManager(
@@ -279,6 +319,9 @@ public class CommonBusinessActivity extends AppCompatActivity implements BranchA
                 false));
     }
 
+    /**
+     * Sets up the service providers recycler view.
+     */
     private void setUpServiceProvidersRecyclerView() {
         serviceProviderRecyclerView = findViewById(R.id.serviceProviderRecyclerView);
         serviceProviderRecyclerView.setLayoutManager(new LinearLayoutManager(
@@ -287,6 +330,9 @@ public class CommonBusinessActivity extends AppCompatActivity implements BranchA
                 false));
     }
 
+    /**
+     * Sets up the add branch text.
+     */
     private void setAddBranchText() {
         if (isCustomer) {
             addBranchText.setVisibility(Button.GONE);
@@ -299,6 +345,9 @@ public class CommonBusinessActivity extends AppCompatActivity implements BranchA
         });
     }
 
+    /**
+     * Sets up the add service provider text.
+     */
     private void setAddServiceProviderText() {
         if (isCustomer) {
             addServiceProviderText.setVisibility(Button.GONE);
@@ -312,14 +361,9 @@ public class CommonBusinessActivity extends AppCompatActivity implements BranchA
         });
     }
 
-    private void setUpAppointmentsButton() {
-        appointmentButton.setOnClickListener(v -> {
-//            Intent intent = new Intent(BusinessManagementActivity.this, AppointmentsActivity.class);
-//            intent.putExtra("businessId", businessId);
-//            startActivity(intent);
-        });
-    }
-
+    /**
+     * Sets up the customer status text.
+     */
     private void setUpCustomerStatus() {
 
         if (isCustomer) {
@@ -331,6 +375,11 @@ public class CommonBusinessActivity extends AppCompatActivity implements BranchA
         });
     }
 
+    /**
+     * Called when a branch is clicked.
+     *
+     * @param branch The branch that was clicked.
+     */
 
     @Override
     public void onBranchClick(Branch branch) {
@@ -339,12 +388,23 @@ public class CommonBusinessActivity extends AppCompatActivity implements BranchA
     }
 
 
+    /**
+     * Called when a service provider is clicked.
+     *
+     * @param serviceProviderId The ID of the service provider that was clicked.
+     */
     @Override
     public void onServiceProviderClick(long serviceProviderId) {
         fetchAppointments(serviceProviderId, tvDate.getText().toString());
     }
 
-    private void fetchAppointments(long serviceProviderId, String date) { // called service provider clicked or when asked to get default or when date is changed
+    /**
+     * Called when the appointments button is clicked. or when asked to get default or when date is changed
+     *
+     * @param serviceProviderId The ID of the service provider.
+     * @param date  The date for which the appointments are to be fetched.
+     */
+    private void fetchAppointments(long serviceProviderId, String date) {
         new Thread(() -> {
 
             try {
@@ -366,6 +426,11 @@ public class CommonBusinessActivity extends AppCompatActivity implements BranchA
         }).start();
     }
 
+    /**
+     * Updates the appointments recycler view.
+     *
+     * @param appointments The list of appointments.
+     */
     private void updateAppointmentsRecyclerView(List<Appointment> appointments) {
         TextView noAppointmentsText = findViewById(R.id.noAppointmentsText);
         if (appointments.isEmpty()) {
@@ -380,6 +445,9 @@ public class CommonBusinessActivity extends AppCompatActivity implements BranchA
         }
     }
 
+    /**
+     * Sets up the date picker.
+     */
     private void setUpDatePicker() {
         tvDate.setOnClickListener(v -> {
             TimeUtil.showDatePickerDialog(this, tvDate, () -> {

@@ -29,6 +29,11 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
+/**
+ * Activity to create a new branch.
+ * It allows users to input branch information and upload an image.
+ */
+
 public class CreateBranchActivity extends AppCompatActivity {
     private EditText branchNameInput;
     private EditText branchAddressInput;
@@ -48,6 +53,12 @@ public class CreateBranchActivity extends AppCompatActivity {
             this::handleImageSelection
     );
 
+    /**
+     * Initializes the activity.
+     *
+     * @param savedInstanceState If the activity is being re-initialized after previously being shut down then this Bundle contains the data it most recently supplied in onSaveInstanceState(Bundle). Note: Otherwise it is null.
+     */
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -60,6 +71,9 @@ public class CreateBranchActivity extends AppCompatActivity {
         setUpCreateBranchButton();
     }
 
+    /**
+     * Initializes the views of the activity.
+     */
     private void initializeViews() {
         branchNameInput = findViewById(R.id.branchNameInput);
         branchAddressInput = findViewById(R.id.branchAddressInput);
@@ -74,7 +88,11 @@ public class CreateBranchActivity extends AppCompatActivity {
         closingTimeInput.setOnClickListener(v -> TimeUtil.showTimePickerDialog(this,closingTimeInput));
     }
 
-
+    /**
+     * Handles the result of image selection from the image picker.
+     * Sets the image to the ImageView and stores the image bytes for later use.
+     * @param uri URI of the selected image.
+     */
     private void handleImageSelection (Uri uri){
         if (uri == null) { // No image selected
             return;
@@ -82,10 +100,17 @@ public class CreateBranchActivity extends AppCompatActivity {
         ImageUtils.handleImageSelection(this, uri, branchLogoImageView, Bitmap.CompressFormat.JPEG, 100);
     }
 
+
+    /**
+     * Sets up the create branch button with a click listener that sends a POST request to the server to create a new branch.
+     */
     private void setUpCreateBranchButton() {
         createBranchButton.setOnClickListener(v -> createBranch());
     }
 
+    /**
+     * Creates a new branch by sending a POST request to the server.
+     */
     private void createBranch(){
         try {
             JSONObject branchData = new JSONObject();
@@ -138,6 +163,10 @@ public class CreateBranchActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Gets the business ID from the server.
+     * @return The business ID.
+     */
     private String getBusinessId() {
         ExecutorService executor = Executors.newSingleThreadExecutor();
         Future<String> result = executor.submit(() -> {
