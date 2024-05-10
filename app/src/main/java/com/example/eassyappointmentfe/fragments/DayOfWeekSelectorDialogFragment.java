@@ -14,6 +14,10 @@ import androidx.fragment.app.DialogFragment;
 
 import com.example.eassyappointmentfe.R;
 
+
+/**
+ * Fragment for selecting days of the week.
+ */
 public class DayOfWeekSelectorDialogFragment extends DialogFragment {
 
     private static final String SHARED_PREFS_NAME = "DayOfWeekPrefs";
@@ -30,6 +34,14 @@ public class DayOfWeekSelectorDialogFragment extends DialogFragment {
         mListener = listener;
     }
 
+    /**
+     * Creates the view for the fragment.
+     *
+     * @param inflater The layout inflater.
+     * @param container The view group container.
+     * @param savedInstanceState The saved instance state.
+     * @return The view for the fragment.
+     */
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -56,16 +68,31 @@ public class DayOfWeekSelectorDialogFragment extends DialogFragment {
         return v;
     }
 
+    /**
+     * Saves the selected state of a day.
+     *
+     * @param dayIndex The index of the day.
+     * @param isSelected Whether the day is selected.
+     */
     private void saveSelectedDay(int dayIndex, boolean isSelected) {
         SharedPreferences sharedPreferences = getActivity().getSharedPreferences(SHARED_PREFS_NAME, Context.MODE_PRIVATE);
         sharedPreferences.edit().putBoolean(SELECTED_DAYS_KEY + dayIndex, isSelected).apply();
     }
 
+    /**
+     * Loads the selected state of a day.
+     *
+     * @param dayIndex The index of the day.
+     * @return Whether the day is selected.
+     */
     private boolean loadSelectedDay(int dayIndex) {
         SharedPreferences sharedPreferences = getActivity().getSharedPreferences(SHARED_PREFS_NAME, Context.MODE_PRIVATE);
         return sharedPreferences.getBoolean(SELECTED_DAYS_KEY + dayIndex, false);
     }
 
+    /**
+     * Clears the selection.
+     */
     public void clearSelection() {
         SharedPreferences sharedPreferences = getActivity().getSharedPreferences(SHARED_PREFS_NAME, Context.MODE_PRIVATE);
         sharedPreferences.edit().clear().apply();

@@ -1,9 +1,7 @@
 package com.example.eassyappointmentfe.fragments;
 
-import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.icu.util.Calendar;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,10 +19,11 @@ import com.example.eassyappointmentfe.util.TimeUtil;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Locale;
 
+/**
+ * Fragment for adding break times to the business hours.
+ */
 public class BreakTimeBottomSheetDialogFragment extends DialogFragment {
-//TODO: fix bug of empty break times being added to the list
     public static final String SHARED_PREFS_NAME = "BreakPrefs";
     public static final String BREAKS_KEY = "breaks";
 
@@ -41,6 +40,14 @@ public class BreakTimeBottomSheetDialogFragment extends DialogFragment {
 
     private BottomSheetListener mListener;
 
+    /**
+     * Creates the view for the fragment.
+     *
+     * @param inflater The layout inflater.
+     * @param container The view group container.
+     * @param savedInstanceState The saved instance state.
+     * @return The view for the fragment.
+     */
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -117,6 +124,12 @@ public class BreakTimeBottomSheetDialogFragment extends DialogFragment {
     }
 
 
+
+    /**
+     * Sets the listener for the bottom sheet.
+     *
+     * @param listener The listener.
+     */
     public void setListener(BottomSheetListener listener) {
         mListener = listener;
     }
@@ -139,6 +152,12 @@ public class BreakTimeBottomSheetDialogFragment extends DialogFragment {
         return breakTimePairLayout;
     }
 
+    /**
+     * Creates an EditText for inputting break times.
+     *
+     * @param hint The hint for the EditText.
+     * @return The EditText.
+     */
     private EditText createBreakTimeEditText(String hint) {
         EditText editText = new EditText(getContext());
         editText.setHint(hint);
@@ -148,6 +167,11 @@ public class BreakTimeBottomSheetDialogFragment extends DialogFragment {
         return editText;
     }
 
+    /**
+     * Loads the breaks from shared preferences.
+     *
+     * @return The list of breaks.
+     */
     private List<String> loadBreaks() {
         SharedPreferences sharedPreferences = getActivity().getSharedPreferences(SHARED_PREFS_NAME, Context.MODE_PRIVATE);
         int count = sharedPreferences.getInt(BREAKS_KEY + "_count", 0);
